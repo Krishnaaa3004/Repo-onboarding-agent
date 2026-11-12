@@ -111,4 +111,20 @@ async def test_second_run_is_served_from_cache(settings, cache):
 
 async def test_bad_url_yields_error_event(settings, cache):
     events = await collect(run_agent("not a url", PROFILE, settings=settings, cache=cache, llm=ScriptedLLM([])))
-    assert events == [{"type": "error", "message": "Not a GitHub repo URL: 'not a url'"}]
+    assert events == [{"type": "error", "code": "bad_url", "message": "Not a GitHub repo URL: 'not a url'"}]
+
+
+async def test_model_fallback_is_streamed_and_failures_get_a_code(settings, cache):
+    class FlakyLLM(ScriptedLLM):
+        async def generate(self, history, system, tools, force_tool=None):
+            self.notices.append("m1 is busy, switched to backup model m2")
+            err = RuntimeError("503 overloaded")
+            err.code = 503
+            raise err
+
+    llm = FlakyLLM([])
+    llm.notices = []
+    events = await collect(run_agent("o/r", PROFILE, settings=settings, cache=cache, llm=llm, gh=FakeGitHub()))
+    fallback = [e for e in events if e.get("kind") == "fallback"]
+    assert fallback == [{"type": "status", "kind": "fallback", "message": "m1 is busy, switched to backup model m2"}]
+    assert events[-1]["type"] == "error" and events[-1]["code"] == "llm_busy"

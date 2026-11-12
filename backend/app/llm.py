@@ -42,6 +42,7 @@ class GeminiLLM:
         healthy = [m for m in chain if GeminiLLM._cooldown_until.get(m, 0) < time.time()] or chain
         self.model = healthy[0]  # the model currently in use (changes if we fall back)
         self.fallbacks = healthy[1:]
+        self.notices: list[str] = []  # model switches, drained and streamed by the agent
 
     # Shared across instances: model name -> unix time until which we avoid it.
     _cooldown_until: dict[str, float] = {}
@@ -100,7 +101,9 @@ class GeminiLLM:
                 if e.code in (404, 429, 500, 503, 504):
                     self._cool_down(self.model, e)
                     if self.fallbacks:
-                        self.model = self.fallbacks.pop(0)
+                        reason = "is out of free quota" if e.code == 429 else "is unavailable" if e.code == 404 else "is busy"
+                        old, self.model = self.model, self.fallbacks.pop(0)
+                        self.notices.append(f"{old} {reason}, switched to backup model {self.model}")
                         continue
                 raise
 

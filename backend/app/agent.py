@@ -179,7 +179,7 @@ async def run_agent(
     try:
         ref = parse_repo_url(repo_url)
     except ValueError as e:
-        yield {"type": "error", "message": str(e)}
+        yield {"type": "error", "code": "bad_url", "message": str(e)}
         return
 
     key = plan_cache_key(ref.full_name, profile)
@@ -202,7 +202,8 @@ async def run_agent(
         try:
             classification, context = await toolbox.overview()
         except GitHubError as e:
-            yield {"type": "error", "message": str(e)}
+            code = "repo_not_found" if e.status == 404 else "github_rate_limit" if e.status in (403, 429) else "github_error"
+            yield {"type": "error", "code": code, "message": str(e)}
             return
         yield {"type": "classification", "data": classification.model_dump()}
 
@@ -228,10 +229,19 @@ async def run_agent(
             m["steps"] = step
             force = "submit_plan" if step == settings.max_agent_steps else None
             yield {"type": "status", "message": "Writing the plan" if force else f"Thinking (step {step})"}
+            failure: Exception | None = None
             try:
                 turn = await llm.generate(history, SYSTEM_PROMPT, TOOL_DECLARATIONS, force_tool=force)
             except Exception as e:  # provider outage, bad key, quota: report it, don't crash the stream
-                yield {"type": "error", "message": f"LLM call failed: {str(e)[:300]}"}
+                failure = e
+            notices = getattr(llm, "notices", [])
+            for notice in notices:  # model switches that happened during this call
+                yield {"type": "status", "kind": "fallback", "message": notice}
+            notices.clear()
+            if failure is not None:
+                status = getattr(failure, "code", None)
+                code = "llm_quota" if status == 429 else "llm_busy" if status in (500, 503, 504) else "llm_error"
+                yield {"type": "error", "code": code, "message": f"LLM call failed: {str(failure)[:300]}"}
                 return
             m["input_tokens"] += turn.input_tokens
             m["output_tokens"] += turn.output_tokens

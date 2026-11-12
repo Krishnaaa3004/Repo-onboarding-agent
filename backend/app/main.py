@@ -91,7 +91,8 @@ async def onboard(
     is_cached = not refresh and cache.get(plan_cache_key(ref.full_name, profile)) is not None
     if not is_cached and not request.app.state.limiter.allow(client_ip(request)):
         return JSONResponse(
-            {"error": f"Rate limit: {settings.rate_limit_per_hour} new analyses per hour. Cached repos still work."},
+            {"error": f"Rate limit: {settings.rate_limit_per_hour} new analyses per hour. Cached repos still work.",
+             "code": "rate_limited"},
             status_code=429,
         )
 

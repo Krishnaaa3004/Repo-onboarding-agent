@@ -1,0 +1,165 @@
+{
+ "plan": {
+  "classification": {
+   "full_name": "pallets/flask",
+   "description": "The Python micro framework for building web applications.",
+   "primary_language": "Python",
+   "languages": {
+    "Python": 99.9,
+    "HTML": 0.1,
+    "Shell": 0.0,
+    "CSS": 0.0
+   },
+   "stars": 75107,
+   "size": "medium",
+   "activity": "active",
+   "file_count": 236,
+   "default_branch": "main"
+  },
+  "architecture_summary": "Flask is a lightweight WSGI web framework built on top of Werkzeug for HTTP utilities and Jinja for template rendering. The core library is located in src/flask. The Flask application object defined in app.py handles request routing, view execution, signal dispatching, and error handling. Session management and request contexts are organized across sessions.py, ctx.py, and globals.py. Request and response objects inherit from Werkzeug primitives in wrappers.py, while modular application structure is provided via blueprints.py. The sansio/ submodule isolates transport-independent routing and application logic from WSGI I/O, while json/ handles custom data structure serialization.",
+  "key_directories": [
+   {
+    "path": "src/flask",
+    "purpose": "Core Flask framework implementation files including app, request context, and CLI handlers"
+   },
+   {
+    "path": "src/flask/json",
+    "purpose": "JSON serialization mechanisms and custom type tag processing"
+   },
+   {
+    "path": "src/flask/sansio",
+    "purpose": "IO-agnostic application logic for routing and blueprint scaffolding"
+   },
+   {
+    "path": "tests",
+    "purpose": "Pytest suite covering core framework behaviors, CLI, context, and serialization"
+   },
+   {
+    "path": "docs",
+    "purpose": "Sphinx documentation files written in reStructuredText"
+   },
+   {
+    "path": "examples",
+    "purpose": "Sample applications illustrating Flask features, Celery integration, and tutorials"
+   }
+  ],
+  "setup_steps": [
+   {
+    "title": "Create virtual environment",
+    "command": "python3 -m venv .venv",
+    "detail": "Create a Python 3.11+ virtual environment for isolated development dependencies.",
+    "source": "pyproject.toml",
+    "inferred": true
+   },
+   {
+    "title": "Install dependencies",
+    "command": "uv sync",
+    "detail": "Install Flask in editable mode along with dev, pre-commit, tests, and typing dependency groups.",
+    "source": "pyproject.toml",
+    "inferred": false
+   },
+   {
+    "title": "Configure pre-commit hooks",
+    "command": "pre-commit install",
+    "detail": "Install git hooks for code formatting, linting (Ruff), and spell checks (codespell).",
+    "source": ".pre-commit-config.yaml",
+    "inferred": false
+   },
+   {
+    "title": "Run test suite",
+    "command": "pytest",
+    "detail": "Run the unit test suite to verify the local environment setup.",
+    "source": "pyproject.toml",
+    "inferred": false
+   }
+  ],
+  "conventions": {
+   "branch": [
+    "Target main for new features and general enhancements.",
+    "Target release branches for backports or maintenance fixes."
+   ],
+   "commit": [
+    "Use clear, concise imperative commit messages describing the change."
+   ],
+   "pull_request": [
+    "Open an issue ticket before submitting code or feature PRs (simple doc fixes do not require an issue).",
+    "Add unit tests for any bug fixes or new functionality under tests/.",
+    "Add or update documentation in docs/ and docstrings in code.",
+    "Include versionchanged directives in docstrings for modified APIs.",
+    "Summarize changes in CHANGES.rst and reference the issue number fixed."
+   ],
+   "code_style": [
+    "Linting and formatting enforced with Ruff (ruff-check and ruff-format via pre-commit).",
+    "Type checking performed using Mypy in strict mode (configured in pyproject.toml).",
+    "Spell checking managed with codespell.",
+    "Pre-commit hooks managed via .pre-commit-config.yaml."
+   ],
+   "sources": [
+    ".github/pull_request_template.md",
+    "pyproject.toml",
+    ".pre-commit-config.yaml"
+   ]
+  },
+  "issues": [
+   {
+    "number": 6146,
+    "title": "Add Cloudflare to Flask Hosting Platforms docs?",
+    "url": "https://github.com/pallets/flask/issues/6146",
+    "labels": [],
+    "difficulty": "easy",
+    "score": 87,
+    "heuristic_score": 0.672,
+    "skill_match": 1.0,
+    "updated_days_ago": 7,
+    "comments": 4,
+    "why": "Simple documentation contribution adding deployment platform resources.",
+    "approach": "Add a bullet point linking to Cloudflare Workers Flask documentation in the 'Hosting Platforms' section of docs/deploying/index.rst. Verify the rendered Sphinx docs locally using tox -e docs or sphinx-build.",
+    "likely_files": [
+     "docs/deploying/index.rst"
+    ]
+   },
+   {
+    "number": 6187,
+    "title": "Replacing a JSON tag with force=True leaves the old tag in the order",
+    "url": "https://github.com/pallets/flask/issues/6187",
+    "labels": [],
+    "difficulty": "easy",
+    "score": 86,
+    "heuristic_score": 0.685,
+    "skill_match": 0.95,
+    "updated_days_ago": 0,
+    "comments": 0,
+    "why": "Direct, isolated Python logic bug in JSON tag serialization with clear pytest test requirements.",
+    "approach": "In TaggedJSONSerializer.register(), check if the key already exists in self.tags when force=True. If present, remove the existing tag instance from self.order before assigning the new tag. Add unit test coverage in tests/test_json_tag.py verifying that forced tag re-registration cleans up self.order.",
+    "likely_files": [
+     "src/flask/json/tag.py",
+     "tests/test_json_tag.py",
+     "CHANGES.rst"
+    ]
+   }
+  ],
+  "first_timer_insights": [
+   "Merged PRs by first-time contributors are small and tightly scoped, changing between 1 and 4 files with under 30 lines of code changed.",
+   "Common areas for first contributions include documentation additions/fixes, small test fixture refactorings, and type annotation updates.",
+   "Code PRs consistently include unit tests under tests/ that demonstrate the change."
+  ],
+  "caveats": [
+   "Detailed contributing guidelines are maintained externally at https://palletsprojects.com/contributing/ rather than in the repository itself.",
+   "Only two unassigned open issues were available in the repository at the time of investigation."
+  ]
+ },
+ "metrics": {
+  "steps": 8,
+  "tool_calls": 14,
+  "input_tokens": 63022,
+  "output_tokens": 4535,
+  "invalid_submissions": 0,
+  "model": "gemini-3.5-flash",
+  "est_cost_usd": 0.03024,
+  "latency_s": 229.93,
+  "github_requests": 15,
+  "github_cache_hits": 3,
+  "cached": false
+ },
+ "trace": []
+}
