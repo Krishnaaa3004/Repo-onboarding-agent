@@ -29,9 +29,29 @@ class LLMTurn:
 
 
 class GeminiLLM:
-    def __init__(self, api_key: str, model: str):
-        self.client = genai.Client(api_key=api_key)
-        self.model = model
+    def __init__(self, api_key: str, model: str, fallback_models: list[str] | None = None):
+        # attempts=1 turns off the SDK's own retries; _call_with_retries is the single retry layer,
+        # so timing is predictable and we can fall back to another model quickly.
+        self.client = genai.Client(
+            api_key=api_key,
+            http_options=types.HttpOptions(retry_options=types.HttpRetryOptions(attempts=1), timeout=60_000),
+        )
+        self.model = model  # the model currently in use (changes if we fall back)
+        self.fallbacks = [m for m in (fallback_models or []) if m != model]
+
+    async def _call_with_retries(self, model: str, history: list, config: types.GenerateContentConfig, attempts: int = 2):
+        for attempt in range(attempts):
+            try:
+                return await self.client.aio.models.generate_content(model=model, contents=history, config=config)
+            except errors.APIError as e:
+                # A daily quota won't reset by waiting a few seconds: give up on this model right away.
+                if e.code == 429 and "PerDay" in str(e):
+                    raise
+                # 429 per-minute limit, 5xx = overloaded: back off and retry. Anything else is fatal.
+                if e.code in (429, 500, 503, 504) and attempt < attempts - 1:
+                    await asyncio.sleep(min(30, 3 * 2**attempt))
+                    continue
+                raise
 
     @staticmethod
     def user_message(text: str) -> types.Content:
@@ -57,18 +77,18 @@ class GeminiLLM:
             tool_config=tool_config,
             # We run tools ourselves so we can stream, log and validate each call.
             automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
-            temperature=0.2,
+            # temperature left at the default: Google recommends 1.0 for Gemini 3 models
         )
 
         resp = None
-        for attempt in range(5):
+        while resp is None:
             try:
-                resp = await self.client.aio.models.generate_content(model=self.model, contents=history, config=config)
-                break
+                resp = await self._call_with_retries(self.model, history, config)
             except errors.APIError as e:
-                # 429 = free-tier rate limit, 5xx = overloaded. Back off and retry; anything else is fatal.
-                if e.code in (429, 500, 503, 504) and attempt < 4:
-                    await asyncio.sleep(min(60, 4 * 2**attempt))
+                # Model overloaded, out of quota (quotas are per model) or retired (404):
+                # move to the next fallback for the rest of this run.
+                if e.code in (404, 429, 500, 503, 504) and self.fallbacks:
+                    self.model = self.fallbacks.pop(0)
                     continue
                 raise
 

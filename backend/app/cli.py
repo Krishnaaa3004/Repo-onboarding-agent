@@ -59,7 +59,7 @@ async def main() -> int:
         return 2
 
     cache = Cache(settings.cache_path)
-    llm = GeminiLLM(settings.gemini_api_key, settings.gemini_model)
+    llm = GeminiLLM(settings.gemini_api_key, settings.gemini_model, settings.gemini_fallback_models)
     profile = Profile(languages=args.lang, level=args.level)
     plan, metrics = None, None
 

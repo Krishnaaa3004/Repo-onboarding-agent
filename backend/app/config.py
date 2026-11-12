@@ -18,7 +18,11 @@ def _csv(value: str) -> list[str]:
 class Settings:
     gemini_api_key: str = field(default_factory=lambda: os.getenv("GEMINI_API_KEY", ""))
     github_token: str = field(default_factory=lambda: os.getenv("GITHUB_TOKEN", ""))
-    gemini_model: str = field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-2.5-flash"))
+    gemini_model: str = field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-3.6-flash"))
+    # Tried in order when the current model stays overloaded (503s); empty disables fallback.
+    gemini_fallback_models: list[str] = field(
+        default_factory=lambda: _csv(os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.5-flash,gemini-3.5-flash-lite"))
+    )
     cache_path: Path = field(
         default_factory=lambda: Path(os.getenv("CACHE_PATH", BACKEND_DIR / "data" / "cache.sqlite3"))
     )

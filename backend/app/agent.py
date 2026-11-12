@@ -180,7 +180,11 @@ async def run_agent(
             m["steps"] = step
             force = "submit_plan" if step == settings.max_agent_steps else None
             yield {"type": "status", "message": "Writing the plan" if force else f"Thinking (step {step})"}
-            turn = await llm.generate(history, SYSTEM_PROMPT, TOOL_DECLARATIONS, force_tool=force)
+            try:
+                turn = await llm.generate(history, SYSTEM_PROMPT, TOOL_DECLARATIONS, force_tool=force)
+            except Exception as e:  # provider outage, bad key, quota: report it, don't crash the stream
+                yield {"type": "error", "message": f"LLM call failed: {str(e)[:300]}"}
+                return
             m["input_tokens"] += turn.input_tokens
             m["output_tokens"] += turn.output_tokens
             history.append(turn.content)
