@@ -95,6 +95,16 @@ class ToolBox:
         }
         return classification, context
 
+    def core_doc_paths(self, notable_docs: list[str]) -> list[str]:
+        """README, CONTRIBUTING and PR template: the docs every plan needs, so we read them up front."""
+        def pick(pattern: str) -> str | None:
+            matches = [p for p in notable_docs if re.search(pattern, p.split("/")[-1], re.I)]
+            # prefer the shallowest copy (root README over docs/readme)
+            return min(matches, key=lambda p: (p.count("/"), len(p))) if matches else None
+
+        paths = [pick(r"^readme"), pick(r"^contributing"), pick(r"pull_request_template")]
+        return [p for p in paths if p]
+
     # ---------- tools ----------
 
     def _tree_listing(self, path: str, depth: int) -> dict:

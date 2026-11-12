@@ -60,6 +60,13 @@ def test_final_score_prefers_level_appropriate_difficulty():
     assert 0 <= final_score(1.0, 5.0, "easy", "beginner") <= 100  # skill_match is clamped
 
 
+def test_clean_lines_drops_leaked_json_fragments():
+    from app.agent import clean_lines
+    leaked = ["- No CLA is required.", "conventions:{branch:[", "],code_style:[", ",difficulty:", "},{approach:",
+              "Run `pytest` before pushing (see CONTRIBUTING.md)", "  "]
+    assert clean_lines(leaked) == ["No CLA is required.", "Run `pytest` before pushing (see CONTRIBUTING.md)"]
+
+
 def test_gemini_schema_is_self_contained():
     schema = gemini_json_schema(PlanSubmission)
     text = str(schema)

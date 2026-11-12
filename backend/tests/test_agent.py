@@ -62,13 +62,13 @@ async def test_full_loop_produces_validated_enriched_plan(settings, cache):
     assert plan["issues"][0]["url"] == "https://github.com/o/r/issues/7"
 
     metrics = next(e["data"] for e in events if e["type"] == "metrics")
-    assert metrics["steps"] == 3 and metrics["tool_calls"] == 3
+    assert metrics["steps"] == 3
+    assert metrics["tool_calls"] == 4 + 3  # 4 prefetched (README, CONTRIBUTING, issues, PRs) + 3 by the model
     assert metrics["input_tokens"] == 3000 and metrics["est_cost_usd"] > 0
 
 
 async def test_invalid_submission_is_sent_back_for_repair(settings, cache):
     llm = ScriptedLLM([
-        [("list_issues", {})],
         [("submit_plan", {"architecture_summary": "missing required fields"})],
         [("submit_plan", valid_submission())],
     ])
@@ -78,10 +78,19 @@ async def test_invalid_submission_is_sent_back_for_repair(settings, cache):
     assert any(e["type"] == "plan" for e in events)
 
 
-async def test_submit_before_list_issues_is_rejected(settings, cache):
-    llm = ScriptedLLM([[("submit_plan", valid_submission())], [("list_issues", {})], [("submit_plan", valid_submission())]])
+async def test_prefetch_lets_model_submit_in_one_turn(settings, cache):
+    llm = ScriptedLLM([[("submit_plan", valid_submission())]])
     events = await collect(run_agent("o/r", PROFILE, settings=settings, cache=cache, llm=llm, gh=FakeGitHub()))
-    assert next(e["data"] for e in events if e["type"] == "metrics")["steps"] == 3
+    prefetched = [(e["name"], e["args"]) for e in events if e["type"] == "tool_call" and e["step"] == 0]
+    assert ("fetch_repo_file", {"path": "CONTRIBUTING.md"}) in prefetched
+    assert {n for n, _ in prefetched} == {"fetch_repo_file", "list_issues", "get_merged_prs_by_first_timers"}
+    assert next(e["data"] for e in events if e["type"] == "metrics")["steps"] == 1
+
+
+def test_core_doc_paths_prefers_shallowest_copy():
+    tb = ToolBox(FakeGitHub(), RepoRef("o", "r"))
+    docs = ["docs/README.md", "README.md", ".github/CONTRIBUTING.md", ".github/PULL_REQUEST_TEMPLATE.md", "CODE_OF_CONDUCT.md"]
+    assert tb.core_doc_paths(docs) == ["README.md", ".github/CONTRIBUTING.md", ".github/PULL_REQUEST_TEMPLATE.md"]
 
 
 async def test_last_step_forces_submit_plan(settings, cache):

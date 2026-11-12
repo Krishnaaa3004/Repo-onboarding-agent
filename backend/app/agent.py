@@ -9,6 +9,7 @@ them as Server-Sent Events without either knowing how the agent works.
 
 import asyncio
 import json
+import re
 import time
 from collections.abc import AsyncIterator
 from typing import Any, Protocol
@@ -20,7 +21,7 @@ from .config import Settings
 from .github import GitHubClient, GitHubError, parse_repo_url
 from .llm import FunctionCall, LLMTurn
 from .schemas import (
-    Classification, OnboardingPlan, PlanSubmission, Profile, RankedIssue,
+    Classification, Conventions, OnboardingPlan, PlanSubmission, Profile, RankedIssue,
 )
 from .scoring import final_score
 from .tools import TOOL_DECLARATIONS, ToolBox
@@ -31,15 +32,17 @@ SYSTEM_PROMPT = """\
 You are an onboarding agent that helps a newcomer make their first contribution to an open-source GitHub repo.
 You investigate the repo with tools, then call submit_plan once.
 
-Process:
-1. Read the provided overview (classification, top-level folders, notable files).
-2. Read the docs that matter: README, CONTRIBUTING (and any docs it links to inside the repo), the PR template.
-   Skim the code of conduct only if it contains contribution rules. Use list_repo_tree to understand layout.
-   For setup steps, also check config files (package.json scripts, pyproject.toml, Makefile, .nvmrc, etc.).
-3. Call get_merged_prs_by_first_timers to see what successful first PRs looked like.
-4. Call list_issues. Pick 3-6 issues that fit the user's languages and level. For the top picks, use
-   search_code or list_repo_tree to find the files likely involved.
-5. Call submit_plan.
+You start with: a repo overview (classification, top-level folders, notable files) and the results of reading the
+README, CONTRIBUTING and PR template (when they exist), listing candidate issues, and finding merged PRs by
+first-time contributors.
+
+Process (you have a budget of about 3 model turns, so batch tool calls in parallel):
+1. Turn 1: in ONE batch, request everything still missing, for example:
+   - setup/config files (package.json, pyproject.toml, Makefile, .nvmrc, devcontainer) for exact commands
+   - a docs page that CONTRIBUTING links to inside the repo
+   - list_repo_tree on the main source folder to explain the architecture
+   - search_code or list_repo_tree to find the files involved in your top 3-5 issue picks
+2. Turn 2: call submit_plan. Only take another tool turn if something essential is still missing.
 
 Rules:
 - Ground everything in what you read. Setup commands must come from the docs or config files; if you infer a
@@ -47,7 +50,8 @@ Rules:
 - Conventions (branch, commit, PR, code style) must come from the repo's own files. Leave a list empty rather than
   guessing, and mention missing guidance in caveats.
 - Write for a student: plain English, short sentences, no hype.
-- Be efficient: batch independent tool calls in one turn when possible, and stay within about 10 tool turns.
+- Pick 3-6 issues from the listed ones that fit the user's languages and level.
+- Be efficient: every model turn counts against a small daily request quota.
 """
 
 
@@ -62,11 +66,22 @@ def plan_cache_key(full_name: str, profile: Profile) -> str:
     return f"plan:{PLAN_CACHE_VERSION}:{full_name.lower()}:{profile.level}:{langs}"
 
 
-def build_prompt(context: dict, profile: Profile) -> str:
+PREFETCH_FILE_CHARS = 8_000
+
+
+def shrink(result: dict) -> dict:
+    """Prefetched files go into every later request, so keep them shorter than on-demand reads."""
+    if "content" in result and len(result["content"]) > PREFETCH_FILE_CHARS:
+        return {**result, "content": result["content"][:PREFETCH_FILE_CHARS], "truncated": True}
+    return result
+
+
+def build_prompt(context: dict, profile: Profile, gathered: list[dict]) -> str:
     return (
         f"User profile: languages={profile.languages or ['not specified']}, level={profile.level}.\n\n"
         f"Repo overview (computed from GitHub metadata):\n{json.dumps(context, indent=1)}\n\n"
-        "Investigate the repo and then call submit_plan."
+        f"Already fetched for you (tool results):\n{json.dumps(gathered, indent=1)}\n\n"
+        "Fill the gaps with one batch of tool calls, then call submit_plan."
     )
 
 
@@ -86,6 +101,19 @@ def summarize_result(name: str, args: dict, result: dict) -> str:
     if name == "get_merged_prs_by_first_timers":
         return f"Found {len(result['prs'])} merged PRs by first-time contributors"
     return "done"
+
+
+_JSON_JUNK = re.compile(r"[{}]|:\[|\],|^\W*$|^\W*\w+:\s*$")
+
+
+def clean_lines(items: list[str]) -> list[str]:
+    """Drop list items that are fragments of leaked JSON (smaller models occasionally do this)."""
+    out = []
+    for s in items:
+        s = s.strip().lstrip("-• ").strip()
+        if len(s) >= 4 and not _JSON_JUNK.search(s):
+            out.append(s)
+    return out
 
 
 def enrich(sub: PlanSubmission, classification: Classification, toolbox: ToolBox, profile: Profile) -> OnboardingPlan:
@@ -123,11 +151,17 @@ def enrich(sub: PlanSubmission, classification: Classification, toolbox: ToolBox
         classification=classification,
         architecture_summary=sub.architecture_summary,
         key_directories=[d for d in sub.key_directories if d.path.strip("/") in known_paths],
-        setup_steps=sub.setup_steps,
-        conventions=sub.conventions,
+        setup_steps=[s for s in sub.setup_steps if s.title.strip()],
+        conventions=Conventions(
+            branch=clean_lines(sub.conventions.branch),
+            commit=clean_lines(sub.conventions.commit),
+            pull_request=clean_lines(sub.conventions.pull_request),
+            code_style=clean_lines(sub.conventions.code_style),
+            sources=[s for s in sub.conventions.sources if s.strip()],
+        ),
         issues=issues[:5],
-        first_timer_insights=sub.first_timer_insights,
-        caveats=sub.caveats,
+        first_timer_insights=clean_lines(sub.first_timer_insights),
+        caveats=clean_lines(sub.caveats),
     )
 
 
@@ -172,8 +206,22 @@ async def run_agent(
             return
         yield {"type": "classification", "data": classification.model_dump()}
 
-        history: list = [llm.user_message(build_prompt(context, profile))]
-        listed_issues = False
+        # Step 0: reads every plan needs, done in code (in parallel) to save LLM requests.
+        # They still go through the same tools, so they show up in the activity feed.
+        yield {"type": "status", "message": "Reading docs, open issues and past first-time PRs"}
+        prefetch = [("fetch_repo_file", {"path": p}) for p in toolbox.core_doc_paths(context["notable_files"]["docs"])]
+        prefetch += [("list_issues", {"limit": 12}), ("get_merged_prs_by_first_timers", {"limit": 5})]
+        for name, args in prefetch:
+            yield {"type": "tool_call", "name": name, "args": args, "step": 0}
+        outputs = await asyncio.gather(*(toolbox.call(n, a) for n, a in prefetch))
+        gathered = []
+        for (name, args), out in zip(prefetch, outputs):
+            m["tool_calls"] += 1
+            yield {"type": "tool_result", "name": name, "summary": summarize_result(name, args, out), "step": 0}
+            gathered.append({"tool": name, "args": args, "result": shrink(out)})
+        listed_issues = any(g["tool"] == "list_issues" and "error" not in g["result"] for g in gathered)
+
+        history: list = [llm.user_message(build_prompt(context, profile, gathered))]
         plan: OnboardingPlan | None = None
 
         for step in range(1, settings.max_agent_steps + 1):

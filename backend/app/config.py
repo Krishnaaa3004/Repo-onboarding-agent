@@ -30,7 +30,7 @@ class Settings:
     github_ttl: int = 6 * 3600
     plan_ttl: int = 24 * 3600
     # Hard cap on LLM turns so a confused model can't loop forever.
-    max_agent_steps: int = field(default_factory=lambda: int(os.getenv("MAX_AGENT_STEPS", "14")))
+    max_agent_steps: int = field(default_factory=lambda: int(os.getenv("MAX_AGENT_STEPS", "4")))
     allowed_origins: list[str] = field(
         default_factory=lambda: _csv(os.getenv("ALLOWED_ORIGINS", "http://localhost:5173"))
     )

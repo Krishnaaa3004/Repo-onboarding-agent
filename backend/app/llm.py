@@ -5,6 +5,7 @@ and swapping providers later only touches this file.
 """
 
 import asyncio
+import time
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -36,20 +37,29 @@ class GeminiLLM:
             api_key=api_key,
             http_options=types.HttpOptions(retry_options=types.HttpRetryOptions(attempts=1), timeout=60_000),
         )
-        self.model = model  # the model currently in use (changes if we fall back)
-        self.fallbacks = [m for m in (fallback_models or []) if m != model]
+        chain = list(dict.fromkeys([model, *(fallback_models or [])]))
+        # Skip models that failed recently in this process; if all are cooling down, try them anyway.
+        healthy = [m for m in chain if GeminiLLM._cooldown_until.get(m, 0) < time.time()] or chain
+        self.model = healthy[0]  # the model currently in use (changes if we fall back)
+        self.fallbacks = healthy[1:]
+
+    # Shared across instances: model name -> unix time until which we avoid it.
+    _cooldown_until: dict[str, float] = {}
+
+    @classmethod
+    def _cool_down(cls, model: str, error: errors.APIError) -> None:
+        daily_quota = error.code == 429 and "PerDay" in str(error)
+        cls._cooldown_until[model] = time.time() + (3600 if daily_quota or error.code == 404 else 300)
 
     async def _call_with_retries(self, model: str, history: list, config: types.GenerateContentConfig, attempts: int = 2):
         for attempt in range(attempts):
             try:
                 return await self.client.aio.models.generate_content(model=model, contents=history, config=config)
             except errors.APIError as e:
-                # A daily quota won't reset by waiting a few seconds: give up on this model right away.
-                if e.code == 429 and "PerDay" in str(e):
-                    raise
-                # 429 per-minute limit, 5xx = overloaded: back off and retry. Anything else is fatal.
-                if e.code in (429, 500, 503, 504) and attempt < attempts - 1:
-                    await asyncio.sleep(min(30, 3 * 2**attempt))
+                # Only a per-minute rate limit is worth waiting for. Overload (5xx) and daily quota
+                # fail over to the next model straight away, since waiting is slow and rarely helps.
+                if e.code == 429 and "PerDay" not in str(e) and attempt < attempts - 1:
+                    await asyncio.sleep(10)
                     continue
                 raise
 
@@ -87,9 +97,11 @@ class GeminiLLM:
             except errors.APIError as e:
                 # Model overloaded, out of quota (quotas are per model) or retired (404):
                 # move to the next fallback for the rest of this run.
-                if e.code in (404, 429, 500, 503, 504) and self.fallbacks:
-                    self.model = self.fallbacks.pop(0)
-                    continue
+                if e.code in (404, 429, 500, 503, 504):
+                    self._cool_down(self.model, e)
+                    if self.fallbacks:
+                        self.model = self.fallbacks.pop(0)
+                        continue
                 raise
 
         candidate = resp.candidates[0] if resp and resp.candidates else None
