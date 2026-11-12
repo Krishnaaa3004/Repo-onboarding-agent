@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1170 330" width="1170" height="330" role="img" aria-label="Architecture: React UI on Vercel streams from a FastAPI server on Render, which runs the agent loop. The agent talks to the Gemini API and to its tools, which call the GitHub API. A SQLite cache sits between the tools, the agent and GitHub.">
+  <style>
+    .box { fill: #ffffff; stroke: #c3cad5; stroke-width: 1.5; }
+    .hl { fill: #edf1ff; stroke: #3b5bdb; stroke-width: 1.8; }
+    .t { font: 600 16px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #1c2230; }
+    .s { font: 13px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #667085; }
+    .lbl { font: 12.5px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #667085; }
+    .e { stroke: #8a94a6; stroke-width: 1.6; fill: none; }
+    .head { fill: #8a94a6; }
+    @media (prefers-color-scheme: dark) {
+      .box { fill: #171b23; stroke: #3a4250; }
+      .hl { fill: #1d2540; stroke: #7c96ff; }
+      .t { fill: #e6e9ef; }
+      .s, .lbl { fill: #98a2b3; }
+      .e { stroke: #6b7486; }
+      .head { fill: #6b7486; }
+    }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="head" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+
+  <!-- edges -->
+  <path class="e" d="M190 155 L258 155" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="224" y="144" text-anchor="middle">GET</text>
+  <text class="lbl" x="224" y="174" text-anchor="middle">SSE</text>
+
+  <path class="e" d="M430 155 L498 155" marker-end="url(#arr)"/>
+  <text class="lbl" x="464" y="144" text-anchor="middle">runs</text>
+
+  <path class="e" d="M670 138 C 705 138, 705 55, 738 55" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="722" y="120" text-anchor="start">LLM turns</text>
+
+  <path class="e" d="M670 172 C 705 172, 705 245, 738 245" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="722" y="198" text-anchor="start">tool calls</text>
+
+  <path class="e" d="M910 245 L978 245" marker-end="url(#arr)"/>
+
+  <path class="e" d="M585 190 L585 248" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="593" y="224">plans</text>
+  <path class="e" d="M738 280 L672 280" marker-start="url(#arr)" marker-end="url(#arr)"/>
+
+  <!-- nodes -->
+  <rect class="box" x="20" y="120" width="170" height="70" rx="10"/>
+  <text class="t" x="105" y="151" text-anchor="middle">React + Vite UI</text>
+  <text class="s" x="105" y="172" text-anchor="middle">Vercel</text>
+
+  <rect class="box" x="260" y="120" width="170" height="70" rx="10"/>
+  <text class="t" x="345" y="151" text-anchor="middle">FastAPI</text>
+  <text class="s" x="345" y="172" text-anchor="middle">Render · SSE endpoint</text>
+
+  <rect class="hl" x="500" y="120" width="170" height="70" rx="10"/>
+  <text class="t" x="585" y="151" text-anchor="middle">Agent loop</text>
+  <text class="s" x="585" y="172" text-anchor="middle">validate · ground · rank</text>
+
+  <rect class="box" x="740" y="20" width="170" height="70" rx="10"/>
+  <text class="t" x="825" y="51" text-anchor="middle">Gemini API</text>
+  <text class="s" x="825" y="72" text-anchor="middle">function calling</text>
+
+  <rect class="box" x="740" y="210" width="170" height="90" rx="10"/>
+  <text class="t" x="825" y="243" text-anchor="middle">Agent tools</text>
+  <text class="s" x="825" y="264" text-anchor="middle">files · tree · issues</text>
+  <text class="s" x="825" y="283" text-anchor="middle">code search · PRs</text>
+
+  <rect class="box" x="980" y="210" width="170" height="70" rx="10"/>
+  <text class="t" x="1065" y="241" text-anchor="middle">GitHub API</text>
+  <text class="s" x="1065" y="262" text-anchor="middle">REST + GraphQL</text>
+
+  <rect class="box" x="500" y="250" width="170" height="60" rx="10"/>
+  <text class="t" x="585" y="276" text-anchor="middle">SQLite cache</text>
+  <text class="s" x="585" y="296" text-anchor="middle">API responses · plans</text>
+</svg>

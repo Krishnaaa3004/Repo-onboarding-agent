@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1110 320" width="1110" height="320" role="img" aria-label="Agent loop: classify the repo and prefetch docs in code, then the LLM takes turns calling tools that run in parallel, then calls submit_plan. The plan is validated, with errors sent back to the model, then grounded and ranked in code.">
+  <style>
+    .code { fill: #ffffff; stroke: #c3cad5; stroke-width: 1.5; }
+    .llm { fill: #f3f0ff; stroke: #7048e8; stroke-width: 1.6; }
+    .t { font: 600 15px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #1c2230; }
+    .s { font: 12.5px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #667085; }
+    .lbl { font: 12.5px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #667085; }
+    .n { font: 700 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #8a94a6; }
+    .e { stroke: #8a94a6; stroke-width: 1.6; fill: none; }
+    .warn { stroke: #d9480f; stroke-dasharray: 5 4; }
+    .warnt { fill: #d9480f; }
+    .head { fill: #8a94a6; }
+    .headw { fill: #d9480f; }
+    @media (prefers-color-scheme: dark) {
+      .code { fill: #171b23; stroke: #3a4250; }
+      .llm { fill: #251d3d; stroke: #9775fa; }
+      .t { fill: #e6e9ef; }
+      .s, .lbl { fill: #98a2b3; }
+      .n { fill: #6b7486; }
+      .e { stroke: #6b7486; }
+      .head { fill: #6b7486; }
+      .warn { stroke: #ff922b; }
+      .warnt, .headw { fill: #ff922b; }
+    }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="head" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="headw" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+
+  <!-- main row arrows -->
+  <path class="e" d="M170 97 L202 97" marker-end="url(#a)"/>
+  <path class="e" d="M354 97 L386 97" marker-end="url(#a)"/>
+  <path class="e" d="M538 97 L570 97" marker-end="url(#a)"/>
+  <path class="e" d="M722 97 L754 97" marker-end="url(#a)"/>
+  <path class="e" d="M906 97 L938 97" marker-end="url(#a)"/>
+
+  <!-- tool loop -->
+  <path class="e" d="M440 134 L440 198" marker-end="url(#a)"/>
+  <path class="e" d="M486 198 L486 134" marker-end="url(#a)"/>
+  <text class="lbl" x="432" y="171" text-anchor="end">tool calls</text>
+  <text class="lbl" x="494" y="171">results</text>
+
+  <!-- repair loop -->
+  <path class="e warn" d="M831 60 C 831 14, 463 14, 463 58" marker-end="url(#w)"/>
+  <text class="lbl warnt" x="647" y="20" text-anchor="middle">invalid plan: errors sent back to the model</text>
+
+  <text class="lbl" x="647" y="158" text-anchor="middle">forced at the step limit</text>
+
+  <!-- boxes -->
+  <rect class="code" x="20" y="60" width="150" height="74" rx="10"/>
+  <text class="n" x="32" y="78">1</text>
+  <text class="t" x="95" y="96" text-anchor="middle">Classify repo</text>
+  <text class="s" x="95" y="116" text-anchor="middle">size · activity · files</text>
+
+  <rect class="code" x="204" y="60" width="150" height="74" rx="10"/>
+  <text class="n" x="216" y="78">2</text>
+  <text class="t" x="279" y="96" text-anchor="middle">Prefetch</text>
+  <text class="s" x="279" y="116" text-anchor="middle">docs · issues · PRs</text>
+
+  <rect class="llm" x="388" y="60" width="150" height="74" rx="10"/>
+  <text class="n" x="400" y="78">3</text>
+  <text class="t" x="463" y="96" text-anchor="middle">LLM turn</text>
+  <text class="s" x="463" y="116" text-anchor="middle">picks tools</text>
+
+  <rect class="llm" x="572" y="60" width="150" height="74" rx="10"/>
+  <text class="n" x="584" y="78">4</text>
+  <text class="t" x="647" y="96" text-anchor="middle">submit_plan</text>
+  <text class="s" x="647" y="116" text-anchor="middle">structured JSON</text>
+
+  <rect class="code" x="756" y="60" width="150" height="74" rx="10"/>
+  <text class="n" x="768" y="78">5</text>
+  <text class="t" x="831" y="96" text-anchor="middle">Validate</text>
+  <text class="s" x="831" y="116" text-anchor="middle">Pydantic schema</text>
+
+  <rect class="code" x="940" y="60" width="150" height="74" rx="10"/>
+  <text class="n" x="952" y="78">6</text>
+  <text class="t" x="1015" y="96" text-anchor="middle">Ground + rank</text>
+  <text class="s" x="1015" y="116" text-anchor="middle">drop unknowns · score</text>
+
+  <rect class="code" x="388" y="200" width="150" height="60" rx="10"/>
+  <text class="t" x="463" y="226" text-anchor="middle">Run tools</text>
+  <text class="s" x="463" y="246" text-anchor="middle">in parallel · cached</text>
+
+  <!-- legend -->
+  <rect class="code" x="20" y="288" width="16" height="16" rx="4"/>
+  <text class="lbl" x="44" y="301">runs in code</text>
+  <rect class="llm" x="150" y="288" width="16" height="16" rx="4"/>
+  <text class="lbl" x="174" y="301">decided by Gemini</text>
+  <text class="lbl" x="1090" y="301" text-anchor="end">every step streams to the browser as an SSE event</text>
+</svg>

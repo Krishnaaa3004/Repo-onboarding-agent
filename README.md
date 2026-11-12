@@ -24,34 +24,11 @@ not following the PR template. This tool does that reading for you and points at
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    UI["React + Vite<br/>(Vercel)"] -- "GET /api/onboard<br/>Server-Sent Events" --> API["FastAPI<br/>(Render)"]
-    API --> Agent["Agent loop"]
-    Agent -- "function calling" --> Gemini["Gemini API"]
-    Agent --> Tools["Tools"]
-    Tools --> GH["GitHub REST + GraphQL"]
-    Tools <--> Cache[("SQLite cache")]
-    Agent <--> Cache
-```
+![Architecture: React UI streams from FastAPI, which runs the agent loop against Gemini and GitHub, with a SQLite cache](docs/architecture.svg)
 
 ## How the agent works
 
-```mermaid
-sequenceDiagram
-    participant C as Code
-    participant M as Gemini
-    participant G as GitHub
-    C->>G: repo metadata, languages, file tree
-    Note over C: classify size and activity, find notable files
-    C->>G: README, CONTRIBUTING, PR template, issues, first-timer PRs (in parallel)
-    C->>M: overview + fetched docs + user profile + tool definitions
-    M->>C: tool calls (config files, code search, folder listings)
-    C->>G: run tools in parallel
-    C->>M: tool results
-    M->>C: submit_plan(structured JSON)
-    Note over C: validate, then drop unknown issues and file paths, then score and rank
-```
+![Agent loop: classify and prefetch in code, LLM turns with parallel tool calls, submit_plan, validate with repair, then ground and rank](docs/agent-loop.svg)
 
 1. **Classify (code).** Repo size, activity and a list of notable files (docs, setup configs, linters, CI) are
    worked out from GitHub data. No LLM is needed for this.
