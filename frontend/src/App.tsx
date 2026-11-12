@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { ScrollRestoration, useLocation, useOutlet } from "react-router-dom";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
@@ -11,7 +11,8 @@ export default function App() {
   const key = location.pathname;
 
   return (
-    <>
+    // reducedMotion="user": Framer skips transform animations when the OS asks for reduced motion
+    <MotionConfig reducedMotion="user">
       <a className="skip-link" href="#main">Skip to content</a>
       <SiteHeader />
       <AnimatePresence mode="wait" initial={false}>
@@ -29,6 +30,6 @@ export default function App() {
       <SiteFooter />
       {/* keyed by URL: every fresh page load shares the key "default", which would restore the wrong position */}
       <ScrollRestoration getKey={(loc) => loc.pathname + loc.search} />
-    </>
+    </MotionConfig>
   );
 }

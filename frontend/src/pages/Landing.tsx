@@ -1,5 +1,5 @@
 import { motion, useScroll, useSpring } from "framer-motion";
-import { lazy, Suspense, useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { HeroArt } from "../components/HeroArt";
 import { ArrowRight } from "../components/Icons";
@@ -32,6 +32,14 @@ function Hero() {
   const reduced = useReducedMotion();
   const wide = useMediaQuery("(min-width: 960px)");
   const use3d = wide && !reduced && hasWebGL();
+  // Start fetching three.js only once the page is idle, so it never delays first paint.
+  const [idle, setIdle] = useState(false);
+  useEffect(() => {
+    if (!use3d) return;
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
+    if (w.requestIdleCallback) w.requestIdleCallback(() => setIdle(true), { timeout: 1500 });
+    else window.setTimeout(() => setIdle(true), 600);
+  }, [use3d]);
 
   return (
     <section className="hero blueprint" aria-labelledby="hero-title">
@@ -49,8 +57,8 @@ function Hero() {
           <RepoForm />
         </div>
         <div className="hero-visual ticks" aria-hidden={use3d ? undefined : true}>
-          {use3d ? (
-            <Suspense fallback={<HeroArt />}>
+          {use3d && idle ? (
+            <Suspense fallback={<HeroArt animate={false} />}>
               <HeroScene />
             </Suspense>
           ) : (

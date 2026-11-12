@@ -10,6 +10,16 @@
 .hero-lede { margin-top: var(--s-5); font-size: var(--t-md); color: var(--ink-2); max-width: 52ch; line-height: 1.55; }
 .hero-visual { position: relative; margin-right: calc(-1 * var(--gutter)); aspect-ratio: 560 / 470; }
 .hero-art { width: 100%; height: auto; }
+.hero-scene { position: absolute; inset: 0; animation: scene-in 0.8s var(--ease) both; }
+@keyframes scene-in { from { opacity: 0; } to { opacity: 1; } }
+.hero-scene canvas { touch-action: pan-y; }
+.scene-label {
+  position: absolute; left: 0; top: 0; white-space: nowrap; will-change: transform;
+  font: 600 11px var(--f-mono); letter-spacing: 0.04em; color: var(--ink);
+  background: color-mix(in srgb, var(--paper) 85%, transparent); padding: 2px 6px; border-radius: 4px;
+  border: 1px solid var(--rule); pointer-events: none;
+}
+.scene-meta { position: absolute; left: 0; right: var(--gutter); bottom: 6px; display: flex; justify-content: space-between; font: 500 10px var(--f-mono); letter-spacing: 0.08em; color: var(--ink-3); text-transform: uppercase; pointer-events: none; }
 .hero-art-num { font: 700 10px var(--f-mono); fill: var(--cobalt); }
 .hero-art-label { font: 600 11px var(--f-mono); fill: var(--ink); letter-spacing: 0.04em; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; }
 .hero-art-meta text { font: 500 10px var(--f-mono); fill: var(--ink-3); letter-spacing: 0.08em; }

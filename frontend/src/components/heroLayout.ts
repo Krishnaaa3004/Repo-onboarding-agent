@@ -16,7 +16,7 @@ export const BLOCKS: Block[] = [
   { name: "CONTRIBUTING", x: 3, y: 0, w: 2, d: 2, h: 1.3, tone: "paper" },
   { name: ".github", x: 8, y: 0, w: 2, d: 2, h: 1, tone: "sand" },
   { name: "docs/", x: 0, y: 3, w: 2, d: 3, h: 2, tone: "sand" },
-  { name: "src/", x: 3, y: 3, w: 4, d: 4, h: 3.6, tone: "cobalt" },
+  { name: "src/", x: 3, y: 3, w: 4, d: 4, h: 2.4, tone: "cobalt" },
   { name: "tests/", x: 8, y: 3, w: 2, d: 3, h: 2.4, tone: "sand" },
   { name: "pyproject", x: 0, y: 7, w: 2, d: 2, h: 1.2, tone: "paper" },
   { name: "examples/", x: 3, y: 8, w: 3, d: 2, h: 1.5, tone: "sand" },
