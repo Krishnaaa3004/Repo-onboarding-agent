@@ -1,30 +1,24 @@
 import { useState, type FormEvent, type KeyboardEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { EXAMPLES } from "../lib/examples";
+import { parseRepo, planPath } from "../lib/repo";
 import type { Level } from "../types";
-import type { RunRequest } from "../useOnboarding";
+import { ArrowRight, Close } from "./Icons";
 
-const EXAMPLES = [
-  { repo: "pallets/flask", languages: ["Python"] },
-  { repo: "httpie/cli", languages: ["Python"] },
-  { repo: "pallets/click", languages: ["Python"] },
-];
 const SUGGESTED = ["Python", "TypeScript", "JavaScript", "Go", "Rust", "Java", "C++", "Docs"];
 
-interface Props {
-  busy: boolean;
-  onSubmit: (req: RunRequest) => void;
-}
-
-export function RepoForm({ busy, onSubmit }: Props) {
+/** The hero input: written on the page like a note on a map, not a boxed form. */
+export function RepoForm() {
+  const navigate = useNavigate();
   const [repo, setRepo] = useState("");
   const [languages, setLanguages] = useState<string[]>(["Python"]);
   const [draft, setDraft] = useState("");
   const [level, setLevel] = useState<Level>("beginner");
+  const [invalid, setInvalid] = useState(false);
 
   const addLanguage = (lang: string) => {
-    const l = lang.trim();
-    if (l && !languages.some((x) => x.toLowerCase() === l.toLowerCase()) && languages.length < 8) {
-      setLanguages([...languages, l]);
-    }
+    const l = lang.trim().replace(/,$/, "");
+    if (l && !languages.some((x) => x.toLowerCase() === l.toLowerCase()) && languages.length < 8) setLanguages([...languages, l]);
     setDraft("");
   };
 
@@ -39,76 +33,75 @@ export function RepoForm({ busy, onSubmit }: Props) {
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    if (repo.trim()) onSubmit({ repo: repo.trim(), languages, level });
+    const parsed = parseRepo(repo);
+    if (!parsed) return setInvalid(true);
+    navigate(planPath(parsed.owner, parsed.repo, languages, level));
   };
 
+  const unused = SUGGESTED.filter((s) => !languages.some((l) => l.toLowerCase() === s.toLowerCase())).slice(0, 4);
+
   return (
-    <form className="card form" onSubmit={submit}>
-      <label className="field">
-        <span>GitHub repository</span>
+    <form className="repo-form" onSubmit={submit} noValidate>
+      <label htmlFor="repo-input" className="visually-hidden">GitHub repository URL</label>
+      <div className={`repo-line ${invalid ? "is-invalid" : ""}`}>
+        <span className="repo-prefix" aria-hidden="true">github.com/</span>
         <input
+          id="repo-input"
           type="text"
-          placeholder="https://github.com/owner/repo"
+          placeholder="owner/repo"
           value={repo}
-          onChange={(e) => setRepo(e.target.value)}
+          onChange={(e) => { setRepo(e.target.value); setInvalid(false); }}
           spellCheck={false}
           autoComplete="off"
-          required
+          aria-invalid={invalid}
+          aria-describedby={invalid ? "repo-error" : undefined}
         />
-      </label>
-
-      <div className="row">
-        <label className="field grow">
-          <span>Languages you know</span>
-          <div className="chips-input">
-            {languages.map((l) => (
-              <button type="button" key={l} className="chip" onClick={() => setLanguages(languages.filter((x) => x !== l))}
-                aria-label={`Remove ${l}`}>
-                {l} <span aria-hidden>×</span>
-              </button>
-            ))}
-            <input
-              type="text"
-              value={draft}
-              placeholder={languages.length ? "" : "e.g. Python"}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={onKey}
-              onBlur={() => draft && addLanguage(draft)}
-              list="lang-suggestions"
-            />
-            <datalist id="lang-suggestions">
-              {SUGGESTED.map((s) => <option key={s} value={s} />)}
-            </datalist>
-          </div>
-        </label>
-
-        <div className="field">
-          <span>Experience</span>
-          <div className="segmented" role="radiogroup" aria-label="Experience level">
-            {(["beginner", "intermediate"] as Level[]).map((l) => (
-              <button type="button" key={l} role="radio" aria-checked={level === l}
-                className={level === l ? "active" : ""} onClick={() => setLevel(l)}>
-                {l[0].toUpperCase() + l.slice(1)}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="form-footer">
-        <div className="examples">
-          <span className="muted">Try:</span>
-          {EXAMPLES.map((ex) => (
-            <button type="button" key={ex.repo} className="link" disabled={busy}
-              onClick={() => { setRepo(ex.repo); setLanguages(ex.languages); onSubmit({ repo: ex.repo, languages: ex.languages, level }); }}>
-              {ex.repo}
-            </button>
-          ))}
-        </div>
-        <button type="submit" className="primary" disabled={busy || !repo.trim()}>
-          {busy ? "Analysing…" : "Build my plan"}
+        <button type="submit" className="btn btn-accent repo-go" disabled={!repo.trim()}>
+          Map it <ArrowRight size={16} />
         </button>
       </div>
+      {invalid && <p id="repo-error" className="repo-error" role="alert">That doesn't look like a GitHub repo. Try something like pallets/flask.</p>}
+
+      <div className="repo-options">
+        <fieldset className="opt">
+          <legend className="eyebrow">I know</legend>
+          <div className="chips">
+            {languages.map((l) => (
+              <button type="button" key={l} className="chip is-on" onClick={() => setLanguages(languages.filter((x) => x !== l))}
+                aria-label={`Remove ${l}`}>
+                {l} <Close size={12} />
+              </button>
+            ))}
+            {unused.map((s) => (
+              <button type="button" key={s} className="chip" onClick={() => addLanguage(s)} aria-label={`Add ${s}`}>+ {s}</button>
+            ))}
+            <input className="chip-input" value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={onKey}
+              onBlur={() => draft && addLanguage(draft)} placeholder="other…" aria-label="Add another language" />
+          </div>
+        </fieldset>
+
+        <fieldset className="opt">
+          <legend className="eyebrow">Experience</legend>
+          <div className="level" role="radiogroup">
+            {(["beginner", "intermediate"] as Level[]).map((l) => (
+              <label key={l} className={`level-opt ${level === l ? "is-on" : ""}`}>
+                <input type="radio" name="level" value={l} checked={level === l} onChange={() => setLevel(l)} />
+                {l}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+
+      <p className="repo-examples">
+        <span className="eyebrow">Or open a mapped repo</span>
+        {EXAMPLES.map((ex, i) => (
+          <span key={ex.slug}>
+            <Link to={`/plan/${ex.slug}`} className="link-arrow mono">{ex.slug}</Link>
+            {i < EXAMPLES.length - 1 && <span className="sep" aria-hidden="true"> · </span>}
+          </span>
+        ))}
+      </p>
     </form>
   );
 }

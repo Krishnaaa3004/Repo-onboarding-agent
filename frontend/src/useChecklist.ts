@@ -15,11 +15,13 @@ export function useChecklist(storageKey: string | null) {
   }, [storageKey]);
 
   const toggle = useCallback(
-    (id: string) => {
+    (id: string, value?: boolean) => {
       setChecked((prev) => {
+        const on = value ?? !prev.has(id);
+        if (on === prev.has(id)) return prev;
         const next = new Set(prev);
-        if (next.has(id)) next.delete(id);
-        else next.add(id);
+        if (on) next.add(id);
+        else next.delete(id);
         try {
           if (storageKey) localStorage.setItem(storageKey, JSON.stringify([...next]));
         } catch {

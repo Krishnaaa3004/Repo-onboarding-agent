@@ -30,6 +30,8 @@ export interface Conventions {
   sources: string[];
 }
 
+export type ConventionKey = Exclude<keyof Conventions, "sources">;
+
 export interface RankedIssue {
   number: number;
   title: string;
@@ -68,13 +70,24 @@ export interface Metrics {
   cached: boolean;
 }
 
+export type ErrorCode =
+  | "bad_url" | "repo_not_found" | "github_rate_limit" | "github_error"
+  | "llm_busy" | "llm_quota" | "llm_error" | "rate_limited" | "network" | "unknown";
+
 export type AgentEvent =
-  | { type: "status"; message: string }
+  | { type: "status"; message: string; kind?: "fallback" }
   | { type: "classification"; data: Classification }
   | { type: "tool_call"; name: string; args: Record<string, unknown>; step: number }
   | { type: "tool_result"; name: string; summary: string; step: number }
   | { type: "note"; text: string }
   | { type: "plan"; plan: OnboardingPlan }
   | { type: "metrics"; data: Metrics }
-  | { type: "error"; message: string }
+  | { type: "error"; message: string; code?: ErrorCode }
   | { type: "done" };
+
+/** A saved run: plan + metrics, and optionally the recorded event trace (with timestamps). */
+export interface ExampleRun {
+  plan: OnboardingPlan;
+  metrics: Metrics;
+  trace: (AgentEvent & { t?: number })[];
+}

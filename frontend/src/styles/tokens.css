@@ -1,0 +1,72 @@
+/* Design tokens: the only place colours, type, spacing and radii are defined. */
+:root {
+  /* paper + ink */
+  --paper: #faf7f2;
+  --paper-2: #f1ece2;
+  --paper-3: #e8e0d1;
+  --rule: #e3dbcc;
+  --rule-strong: #cfc4b0;
+  --ink: #17150f;
+  --ink-2: #5e584d;
+  --ink-3: #6f685c;
+
+  /* one accent: blueprint cobalt */
+  --cobalt: #2443c4;
+  --cobalt-deep: #1a3299;
+  --cobalt-tint: #dfe5fa;
+  --grid-minor: rgba(36, 67, 196, 0.06);
+  --grid-major: rgba(36, 67, 196, 0.11);
+
+  /* one secondary: highlighter */
+  --marker: #f3d985;
+  --marker-soft: #f8ebbd;
+
+  /* functional status colours (muted, used sparingly) */
+  --ok: #2f7d4f;
+  --ok-tint: #e2f0e6;
+  --warn: #a8571a;
+  --warn-tint: #f7e8d6;
+  --err: #b3362b;
+  --err-tint: #f6e0dc;
+
+  /* type */
+  --f-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --f-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --t-2xs: 11px;
+  --t-xs: 12.5px;
+  --t-sm: 14px;
+  --t-base: 16px;
+  --t-md: 18px;
+  --t-lg: 22px;
+  --t-xl: clamp(26px, 2.6vw, 34px);
+  --t-2xl: clamp(34px, 4.6vw, 58px);
+  --t-hero: clamp(44px, 6.6vw, 92px);
+
+  /* spacing (4px base) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --s-10: 140px;
+
+  --r-sm: 6px;
+  --r: 10px;
+  --r-lg: 18px;
+
+  --lift: 0 1px 0 var(--rule), 0 14px 30px -18px rgba(23, 21, 15, 0.28);
+  --lift-hover: 0 1px 0 var(--rule-strong), 0 22px 40px -20px rgba(23, 21, 15, 0.32);
+
+  --maxw: 1240px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --header-h: 64px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  color-scheme: light;
+}
