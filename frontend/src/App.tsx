@@ -2,6 +2,8 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { ScrollRestoration, useLocation, useOutlet } from "react-router-dom";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
+import { API_URL } from "./useOnboarding";
+import { useEffect } from "react";
 
 /** Layout shell: header, animated page outlet, footer. */
 export default function App() {
@@ -9,6 +11,12 @@ export default function App() {
   const outlet = useOutlet();
   // plan pages for different repos are different pages; query changes are not
   const key = location.pathname;
+
+  // The free backend sleeps when idle and takes ~30s to wake. Ping it once on load so it is
+  // usually awake by the time someone has typed a repo. Failures are ignored on purpose.
+  useEffect(() => {
+    fetch(`${API_URL}/api/health`, { mode: "cors" }).catch(() => {});
+  }, []);
 
   return (
     // reducedMotion="user": Framer skips transform animations when the OS asks for reduced motion
