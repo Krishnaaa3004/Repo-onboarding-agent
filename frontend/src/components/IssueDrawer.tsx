@@ -50,7 +50,7 @@ export function IssueDrawer({ issue, fullName, branch, level, picked, onTogglePi
             initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 34 }}>
             <div className="drawer-head">
-              <span className="eyebrow">Issue #{issue.number} Â· score {issue.score}</span>
+              <span className="eyebrow">Issue #{issue.number} · score {issue.score}</span>
               <button ref={closeRef} type="button" className="icon-btn" onClick={onClose} aria-label="Close"><Close size={18} /></button>
             </div>
             <h2 id="drawer-title" className="drawer-title">{issue.title}</h2>
@@ -86,7 +86,7 @@ export function IssueDrawer({ issue, fullName, branch, level, picked, onTogglePi
                 <Bar label="Skill match" hint="judged by the model" value={issue.skill_match} weight={35} />
                 <Bar label="Difficulty fit" hint={`${issue.difficulty} for a ${level}`} value={fit} weight={25} />
               </ul>
-              <p className="drawer-meta">Updated {issue.updated_days_ago === 0 ? "today" : `${issue.updated_days_ago} days ago`} Â· {issue.comments} comment{issue.comments === 1 ? "" : "s"}</p>
+              <p className="drawer-meta">Updated {issue.updated_days_ago === 0 ? "today" : `${issue.updated_days_ago} days ago`} · {issue.comments} comment{issue.comments === 1 ? "" : "s"}</p>
             </section>
 
             <div className="drawer-actions">
@@ -105,7 +105,7 @@ export function IssueDrawer({ issue, fullName, branch, level, picked, onTogglePi
 function Bar({ label, hint, value, weight }: { label: string; hint: string; value: number; weight: number }) {
   return (
     <li>
-      <span className="bd-label">{label} <span className="bd-hint">{hint} Â· {weight}%</span></span>
+      <span className="bd-label">{label} <span className="bd-hint">{hint} · {weight}%</span></span>
       <span className="bd-track"><span style={{ width: `${Math.round(value * 100)}%` }} /></span>
       <span className="bd-val mono">{Math.round(value * 100)}</span>
     </li>

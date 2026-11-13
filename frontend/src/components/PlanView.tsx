@@ -153,13 +153,13 @@ export function PlanView({ plan, checked, toggle, onOpenIssue }: Props) {
         <section className="field-notes" aria-label="Field notes">
           {plan.first_timer_insights.length > 0 && (
             <div>
-              <p className="eyebrow">Field notes Â· what first PRs here looked like</p>
+              <p className="eyebrow">Field notes · what first PRs here looked like</p>
               <ul>{plan.first_timer_insights.map((s, i) => <li key={i}><Rich text={s} /></li>)}</ul>
             </div>
           )}
           {plan.caveats.length > 0 && (
             <div>
-              <p className="eyebrow">Caveats Â· what the agent wasn't sure about</p>
+              <p className="eyebrow">Caveats · what the agent wasn't sure about</p>
               <ul>{plan.caveats.map((s, i) => <li key={i}><Rich text={s} /></li>)}</ul>
             </div>
           )}
