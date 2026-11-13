@@ -7,6 +7,7 @@ import { IssueDrawer } from "../components/IssueDrawer";
 import { MapDrawing } from "../components/MapDrawing";
 import { PlanView, sectionDefs, type SectionDef } from "../components/PlanView";
 import { findExample } from "../lib/examples";
+import { cleanLanguages } from "../lib/languages";
 import { useMediaQuery, usePageTitle } from "../lib/hooks";
 import { planPath } from "../lib/repo";
 import type { ErrorCode, Level, RankedIssue } from "../types";
@@ -22,7 +23,8 @@ export default function PlanPage() {
   const level: Level = params.get("level") === "intermediate" ? "intermediate" : "beginner";
   const langParam = params.get("langs");
   const languages = useMemo(
-    () => (langParam ?? (example ? "Python" : "")).split(",").map((s) => s.trim()).filter(Boolean),
+    // the URL is user-editable too, so it goes through the same whitelist as the form
+    () => cleanLanguages((langParam ?? (example ? "Python" : "")).split(",")),
     [langParam, example],
   );
 
