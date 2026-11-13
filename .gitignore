@@ -20,8 +20,9 @@ node_modules/
 dist/
 .vite/
 
-# Tool output
+# Tool output and local editor/assistant config
 .playwright-mcp/
+.claude/
 
 # Editors / OS
 .vscode/
