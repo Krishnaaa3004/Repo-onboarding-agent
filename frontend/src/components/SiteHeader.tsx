@@ -17,10 +17,10 @@ export function SiteHeader() {
   return (
     <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
       <div className={`${wide ? "wrap-wide" : "wrap"} site-header-inner`}>
-        <Link to="/" className="wordmark" aria-label="Repo Onboarding Agent, home">
+        <Link to="/" className="wordmark" aria-label="Onboarding agent, home">
           <Compass size={22} className="wordmark-mark" />
           <span>
-            <span className="wordmark-main">Onboarding</span>
+            <span className="wordmark-main">Onboarding</span>{" "}
             <span className="wordmark-sub">agent</span>
           </span>
         </Link>
