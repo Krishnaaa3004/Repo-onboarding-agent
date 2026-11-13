@@ -4,7 +4,7 @@ Paste a GitHub repo, pick the languages you know, and get a personalised plan fo
 how the code is organised, how to set it up, the repo's own rules for commits and PRs, and a few open issues
 that fit your skills. Shown as a checklist you can tick off.
 
-> A student project, built in two days to learn how tool-calling agents work end to end.
+> A student project, built to learn how tool-calling agents work end to end.
 > Live demo and demo GIF: coming soon.
 
 ## Why
