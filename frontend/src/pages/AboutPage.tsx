@@ -30,8 +30,8 @@ export default function AboutPage() {
           <p className="eyebrow">About</p>
           <h1 className="page-title">A small agent with a narrow job.</h1>
           <p className="page-lede">
-            Repo Onboarding Agent is a student project, built in two days to learn how tool-calling agents work end
-            to end: the loop, the tools, the guardrails, and how to measure whether the output is any good.
+            Repo Onboarding Agent is a student project, built to learn how tool-calling agents work end to end: the
+            loop, the tools, the guardrails, and how to measure whether the output is any good.
           </p>
         </div>
       </header>
