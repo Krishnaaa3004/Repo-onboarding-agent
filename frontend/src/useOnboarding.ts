@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AgentEvent, Classification, ErrorCode, ExampleRun, Level, Metrics, OnboardingPlan } from "./types";
 
+// VITE_API_URL is baked in at build time. If it's missing or empty, production builds fall back to the
+// deployed Render API (never localhost, which would only work on the developer's own machine).
+const PROD_API = "https://repo-onboarding-agent-api.onrender.com";
 export const API_URL =
-  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ?? "http://localhost:8000";
+  ((import.meta.env.VITE_API_URL as string | undefined) || "").replace(/\/$/, "") ||
+  (import.meta.env.PROD ? PROD_API : "http://localhost:8000");
 
 export interface TraceItem {
   id: number;
