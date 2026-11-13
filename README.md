@@ -5,8 +5,14 @@ how the code is organised, how to set it up, the repo's own rules for commits an
 that fit your skills. Shown as a checklist you can tick off.
 
 > A student project, built to learn how tool-calling agents work end to end.
-> **Live: [repo-onboarding-agent.vercel.app](https://repo-onboarding-agent.vercel.app)** · Demo GIF: coming soon.
+> **Live: [repo-onboarding-agent.vercel.app](https://repo-onboarding-agent.vercel.app)**
 > The free backend sleeps when idle, so the first new repo can take ~30 s longer. The example plans open instantly.
+
+![Demo: typing encode/httpx, the agent trace filling in live, then the plan with setup steps, house rules and a ranked issue's suggested approach](docs/demo.gif)
+
+<sub>Real agent output, sped up while the agent works. The first half is a live run on the deployed site (it
+fell back to a backup model because the main one was busy, as the trace shows); the plan walkthrough at the
+end was recorded locally from an earlier run of the same repo.</sub>
 
 ## Why
 
