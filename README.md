@@ -33,7 +33,7 @@ not following the PR template. This tool does that reading for you and points at
 1. **Classify (code).** Repo size, activity and a list of notable files (docs, setup configs, linters, CI) are
    worked out from GitHub data. No LLM is needed for this.
 2. **Prefetch (code).** The docs every plan needs, the candidate issues and the first-timer PRs are fetched in
-   parallel and go into the first prompt. This cuts LLM requests from 5–8 per run to about 3, which matters on
+   parallel and go into the first prompt. This cuts LLM requests from 5–8 per run to 2–3 (median 2 in the eval), which matters on
    the free tier.
 3. **Investigate (LLM).** Gemini calls tools to fill the gaps:
 
@@ -67,9 +67,38 @@ overloaded. So:
 
 ## Evaluation
 
-In progress. The plan: about 10 well-known repos, each with hand-written expected setup steps and conventions,
-scored on how many expected facts appear in the generated plan. Cost (tokens and estimated USD) and latency
-are logged per run.
+**51 of 56 expected facts found (91%) across 10 repos.** Full report:
+[`backend/evals/results/report.md`](backend/evals/results/report.md).
+
+How it works: for 10 well-known repos (Python, JS/TS, Rust, Go) I wrote 3–7 facts each by hand from the
+repo's own CONTRIBUTING file and PR template: setup commands (`scripts/install`, `pnpm i`, `uv sync`) and
+conventions (changelog entries, CLA, commit format). The facts were committed
+([`evals/cases.json`](backend/evals/cases.json)) before the first run. The harness runs the agent fresh on
+each repo and counts a fact as found if it appears in the plan's setup steps or conventions.
+
+| | Result |
+|---|---|
+| Setup facts | 21/21 (100%) |
+| Convention facts | 30/35 (86%) |
+| Median time per fresh plan | 53 s (max 109 s) |
+| Median per plan | 2 model turns, 9 tool calls, ~28k tokens |
+| Estimated cost per plan | ~$0.06 at Gemini 3.6 Flash list price ($0 on the free tier) |
+
+Notes:
+
+- The misses were conventions the docs mention in passing (e.g. "commits are squashed on merge").
+- 5 runs used `gemini-3.6-flash` and 5 fell back to `gemini-3.5-flash-lite` because 3.6 was overloaded.
+- While checking each match by hand I found one over-broad pattern (`insta` matching "Install"), fixed it,
+  and rescored: 52/56 became 51/56.
+- It measures recall (are the expected facts there?), not precision. One plan mentioned a sign-off rule the
+  repo doesn't have.
+
+Run it yourself (uses your Gemini quota; results are saved per repo, so it can resume):
+
+```bash
+cd backend
+uv run python -m evals.run_eval
+```
 
 ## Running locally
 
@@ -117,8 +146,12 @@ backend/app/
   cache.py     SQLite key-value cache with TTLs
   main.py      FastAPI app and SSE endpoint
   cli.py       command-line runner
-frontend/src/  React UI (form, live activity feed, checklist)
+backend/evals/ eval cases, runner, scorer and saved results
+frontend/src/  React UI (landing, plan page, live agent trace, checklist)
+docs/          diagrams and the deploy guide
 ```
+
+Deploying: see [`docs/deploy.md`](docs/deploy.md) (Render for the API, Vercel for the frontend).
 
 ## Limitations
 
@@ -132,6 +165,7 @@ frontend/src/  React UI (form, live activity feed, checklist)
 
 - **Pre-PR diff checker**: paste your diff before opening a PR and check it against the repo's conventions
   (tests touched, changelog updated, commit format, PR template filled in).
+- Measure precision: flag claims in a plan that the repo's docs don't support.
 - Follow contributing guides hosted outside the repo.
 - Detect issues that already have a linked open PR.
 - Shareable plan links.
