@@ -22,9 +22,10 @@
   --marker-soft: #f8ebbd;
 
   /* functional status colours (muted, used sparingly) */
-  --ok: #2f7d4f;
+  /* darkened to clear WCAG AA (4.5:1) on their tints: 5.46 and 5.41 */
+  --ok: #276b43;
   --ok-tint: #e2f0e6;
-  --warn: #a8571a;
+  --warn: #94491a;
   --warn-tint: #f7e8d6;
   --err: #b3362b;
   --err-tint: #f6e0dc;
