@@ -1,0 +1,131 @@
+{
+  "_about": "Hand-written expected facts, taken from each repo's own CONTRIBUTING / PR template on 2026-11-14 (default branch). Written and committed before any eval run. A fact counts as found if any pattern (case-insensitive regex) matches the plan's setup steps or conventions.",
+  "cases": [
+    {
+      "repo": "httpie/cli",
+      "languages": ["Python"],
+      "sources": ["CONTRIBUTING.md"],
+      "facts": [
+        {"id": "make-all", "kind": "setup", "fact": "`make all` (or `make install`) sets up the dev environment", "patterns": ["make all", "make install"]},
+        {"id": "make-test", "kind": "setup", "fact": "Run tests with `make test` (pytest)", "patterns": ["make test", "pytest"]},
+        {"id": "pep8", "kind": "convention", "fact": "Code must follow PEP8; `make codestyle` must pass", "patterns": ["pep ?8", "codestyle", "pycodestyle"]},
+        {"id": "tests-required", "kind": "convention", "fact": "Code changes need tests", "patterns": ["(add|include|write|need|require)\\w*.{0,40}tests?", "without tests"]},
+        {"id": "changelog", "kind": "convention", "fact": "Consider adding a CHANGELOG entry", "patterns": ["changelog"]},
+        {"id": "topic-branch", "kind": "convention", "fact": "Work on a topical branch", "patterns": ["(new|topic\\w*|feature) branch", "checkout -b", "switch -c"]}
+      ]
+    },
+    {
+      "repo": "encode/httpx",
+      "languages": ["Python"],
+      "sources": [".github/CONTRIBUTING.md", ".github/PULL_REQUEST_TEMPLATE.md"],
+      "facts": [
+        {"id": "scripts-install", "kind": "setup", "fact": "Install with `scripts/install`", "patterns": ["scripts/install"]},
+        {"id": "scripts-test", "kind": "setup", "fact": "Run tests with `scripts/test`", "patterns": ["scripts/test"]},
+        {"id": "scripts-lint-check", "kind": "convention", "fact": "Format with `scripts/lint`, check with `scripts/check`", "patterns": ["scripts/(lint|check)"]},
+        {"id": "coverage-100", "kind": "convention", "fact": "Test coverage must stay at 100%", "patterns": ["100 ?%", "coverage"]},
+        {"id": "tests-required", "kind": "convention", "fact": "Add a test for each change", "patterns": ["(add|include|write|need|require)\\w*.{0,40}tests?"]}
+      ]
+    },
+    {
+      "repo": "pydantic/pydantic",
+      "languages": ["Python"],
+      "sources": ["CONTRIBUTING.md", ".github/PULL_REQUEST_TEMPLATE.md"],
+      "facts": [
+        {"id": "uv", "kind": "setup", "fact": "Uses uv for the toolchain", "patterns": ["\\buv\\b"]},
+        {"id": "make-install", "kind": "setup", "fact": "`make install` installs dependencies", "patterns": ["make install"]},
+        {"id": "pre-commit", "kind": "setup", "fact": "Install pre-commit (`uv tool install pre-commit`)", "patterns": ["pre-commit"]},
+        {"id": "make-format-test", "kind": "convention", "fact": "`make format` to format, `make` to run tests and lint", "patterns": ["make (format|lint|test)", "(?m)^\\s*\\$?\\s*make\\s*$", "run `make`"]},
+        {"id": "new-branch", "kind": "convention", "fact": "Create a new branch for your changes", "patterns": ["(new|feature|topic\\w*) branch", "switch -c", "checkout -b"]},
+        {"id": "docs-build", "kind": "convention", "fact": "If docs changed, `make docs` must build", "patterns": ["make docs", "mkdocs"]}
+      ]
+    },
+    {
+      "repo": "Textualize/rich",
+      "languages": ["Python"],
+      "sources": ["CONTRIBUTING.md", ".github/pull_request_template.md"],
+      "facts": [
+        {"id": "uv-sync", "kind": "setup", "fact": "`uv sync` creates the venv and installs dev dependencies", "patterns": ["uv sync"]},
+        {"id": "make-test", "kind": "setup", "fact": "Run tests with `make test` (or `uv run pytest`)", "patterns": ["make test", "pytest"]},
+        {"id": "black", "kind": "convention", "fact": "Format code with black", "patterns": ["\\bblack\\b"]},
+        {"id": "changelog", "kind": "convention", "fact": "Update CHANGELOG.md before the PR", "patterns": ["changelog"]},
+        {"id": "contributors", "kind": "convention", "fact": "Add yourself to CONTRIBUTORS.md", "patterns": ["contributors"]},
+        {"id": "pre-commit", "kind": "convention", "fact": "Install the pre-commit hooks", "patterns": ["pre-commit"]},
+        {"id": "issue-first", "kind": "convention", "fact": "Open or link an issue/discussion before starting", "patterns": ["(open|link|create|start)\\w*.{0,30}(issue|discussion)"]}
+      ]
+    },
+    {
+      "repo": "vitejs/vite",
+      "languages": ["TypeScript"],
+      "sources": ["CONTRIBUTING.md", ".github/PULL_REQUEST_TEMPLATE.md"],
+      "facts": [
+        {"id": "pnpm-install", "kind": "setup", "fact": "`pnpm i` in the repo root", "patterns": ["pnpm (i|install)\\b"]},
+        {"id": "pnpm-build", "kind": "setup", "fact": "`pnpm run build` before testing", "patterns": ["pnpm (run )?build"]},
+        {"id": "pnpm-test", "kind": "setup", "fact": "Run tests with `pnpm test`", "patterns": ["pnpm (run )?test"]},
+        {"id": "tests-required", "kind": "convention", "fact": "Include tests that fail without the PR", "patterns": ["(add|include|write|need|require)\\w*.{0,40}tests?", "test case"]},
+        {"id": "issue-first", "kind": "convention", "fact": "Open a suggestion issue before a new feature", "patterns": ["(open|create|propose|start)\\w*.{0,30}(issue|discussion)"]},
+        {"id": "squash", "kind": "convention", "fact": "Multiple commits are fine; they are squashed on merge", "patterns": ["squash"]}
+      ]
+    },
+    {
+      "repo": "astral-sh/ruff",
+      "languages": ["Rust"],
+      "sources": ["CONTRIBUTING.md", ".github/PULL_REQUEST_TEMPLATE.md"],
+      "facts": [
+        {"id": "rust-toolchain", "kind": "setup", "fact": "Install the Rust toolchain", "patterns": ["rust ?up", "rust toolchain", "install rust"]},
+        {"id": "uv", "kind": "setup", "fact": "uv manages the dev toolchain", "patterns": ["\\buv\\b"]},
+        {"id": "cargo-test", "kind": "setup", "fact": "Run tests with `cargo test` / nextest", "patterns": ["cargo (test|nextest)", "nextest"]},
+        {"id": "clippy", "kind": "convention", "fact": "Must pass `cargo clippy` lint", "patterns": ["clippy"]},
+        {"id": "prek", "kind": "convention", "fact": "Run formatting hooks with prek", "patterns": ["\\bprek\\b", "pre-commit"]},
+        {"id": "insta", "kind": "convention", "fact": "Update snapshot tests with `cargo insta review`", "patterns": ["insta"]},
+        {"id": "rule-in-title", "kind": "convention", "fact": "PR title names the lint rule category/code", "patterns": ["rule (code|name)", "categor"]}
+      ]
+    },
+    {
+      "repo": "sharkdp/bat",
+      "languages": ["Rust"],
+      "sources": ["CONTRIBUTING.md"],
+      "facts": [
+        {"id": "cargo-build", "kind": "setup", "fact": "Build with cargo", "patterns": ["cargo (build|install|run|test)"]},
+        {"id": "changelog", "kind": "convention", "fact": "Add a CHANGELOG entry (checked by CI)", "patterns": ["changelog"]},
+        {"id": "regression-tests", "kind": "convention", "fact": "Add regression tests (tests/integration_tests.rs)", "patterns": ["integration_tests", "regression tests?", "(add|include|write)\\w*.{0,40}tests?"]}
+      ]
+    },
+    {
+      "repo": "pytest-dev/pytest",
+      "languages": ["Python"],
+      "sources": ["CONTRIBUTING.rst", ".github/PULL_REQUEST_TEMPLATE.md"],
+      "facts": [
+        {"id": "tox", "kind": "setup", "fact": "Run tests and checks with tox", "patterns": ["\\btox\\b"]},
+        {"id": "changelog-file", "kind": "convention", "fact": "Add a changelog file `changelog/<issue>.<type>.rst`", "patterns": ["changelog"]},
+        {"id": "tests-required", "kind": "convention", "fact": "Include new or updated tests", "patterns": ["(add|include|new|update|write)\\w*.{0,40}tests?"]},
+        {"id": "ai-policy", "kind": "convention", "fact": "AI-assisted work must be understood and credited (Co-authored-by)", "patterns": ["co-authored-by", "\\bAI\\b", "LLM", "agentic"]},
+        {"id": "squash", "kind": "convention", "fact": "Maintainers may squash commits on merge", "patterns": ["squash"]}
+      ]
+    },
+    {
+      "repo": "prettier/prettier",
+      "languages": ["JavaScript", "TypeScript"],
+      "sources": ["CONTRIBUTING.md", ".github/PULL_REQUEST_TEMPLATE.md"],
+      "facts": [
+        {"id": "yarn", "kind": "setup", "fact": "Install dependencies with yarn", "patterns": ["\\byarn\\b"]},
+        {"id": "yarn-test", "kind": "setup", "fact": "Run tests with `yarn test`", "patterns": ["yarn test", "jest"]},
+        {"id": "changelog-unreleased", "kind": "convention", "fact": "User-facing changes need a `changelog_unreleased/` entry", "patterns": ["changelog"]},
+        {"id": "yarn-fix", "kind": "convention", "fact": "Lint and format with `yarn fix` (ESLint + Prettier)", "patterns": ["yarn fix", "eslint"]},
+        {"id": "no-new-options", "kind": "convention", "fact": "PRs adding new formatting options are not accepted", "patterns": ["(new|additional|formatting) options?", "option philosophy"]}
+      ]
+    },
+    {
+      "repo": "gohugoio/hugo",
+      "languages": ["Go"],
+      "sources": ["CONTRIBUTING.md"],
+      "facts": [
+        {"id": "go-mage-install", "kind": "setup", "fact": "Install with `go install` / `mage install`", "patterns": ["go install", "mage install", "\\bmage\\b"]},
+        {"id": "check-sh", "kind": "setup", "fact": "`./check.sh` must succeed (or `mage test`)", "patterns": ["check\\.sh", "mage (test|check)", "go test"]},
+        {"id": "cla", "kind": "convention", "fact": "Sign the CLA", "patterns": ["\\bCLA\\b", "contributor license"]},
+        {"id": "squash", "kind": "convention", "fact": "Squash commits into a single commit", "patterns": ["squash"]},
+        {"id": "pkg-prefix", "kind": "convention", "fact": "Commit subject prefixed with the package name, imperative mood", "patterns": ["package name", "prefix", "imperative"]},
+        {"id": "fixes-issue", "kind": "convention", "fact": "Reference issues with `Fixes #1234` / `See #1234`", "patterns": ["fixes #", "see #", "issue (number|id)"]}
+      ]
+    }
+  ]
+}
