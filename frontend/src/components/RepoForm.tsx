@@ -1,11 +1,13 @@
-import { useState, type FormEvent, type KeyboardEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { EXAMPLES } from "../lib/examples";
+import { normalizeLanguage } from "../lib/languages";
+import { LanguageInput } from "./LanguageInput";
 import { parseRepo, planPath } from "../lib/repo";
 import type { Level } from "../types";
 import { ArrowRight, Close } from "./Icons";
 
-const SUGGESTED = ["Python", "TypeScript", "JavaScript", "Go", "Rust", "Java", "C++", "Docs"];
+const SUGGESTED = ["Python", "TypeScript", "JavaScript", "Go", "Rust", "Java", "C++"];
 
 /** The hero input: written on the page like a note on a map, not a boxed form. */
 export function RepoForm() {
@@ -15,20 +17,24 @@ export function RepoForm() {
   const [draft, setDraft] = useState("");
   const [level, setLevel] = useState<Level>("beginner");
   const [invalid, setInvalid] = useState(false);
+  const [langError, setLangError] = useState<string | null>(null);
 
-  const addLanguage = (lang: string) => {
-    const l = lang.trim().replace(/,$/, "");
-    if (l && !languages.some((x) => x.toLowerCase() === l.toLowerCase()) && languages.length < 8) setLanguages([...languages, l]);
-    setDraft("");
-  };
-
-  const onKey = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault();
-      addLanguage(draft);
-    } else if (e.key === "Backspace" && !draft && languages.length) {
-      setLanguages(languages.slice(0, -1));
+  /** Only real programming languages become chips; anything else gets a short explanation. */
+  const addLanguage = (input: string) => {
+    const raw = input.trim().replace(/,$/, "");
+    if (!raw) return;
+    const lang = normalizeLanguage(raw);
+    if (!lang) {
+      setLangError(`“${raw.slice(0, 30)}” isn't a programming language we recognise. Try Python, Go or Rust.`);
+      return; // keep the text so it can be corrected
     }
+    if (languages.length >= 8) {
+      setLangError("You can add up to 8 languages.");
+      return;
+    }
+    if (!languages.includes(lang)) setLanguages([...languages, lang]);
+    setLangError(null);
+    setDraft("");
   };
 
   const submit = (e: FormEvent) => {
@@ -64,7 +70,9 @@ export function RepoForm() {
 
       <div className="repo-options">
         <fieldset className="opt">
-          <legend className="eyebrow">I know</legend>
+          <legend className="opt-label">
+            Languages you know <span className="opt-hint">used to match issues to you</span>
+          </legend>
           <div className="chips">
             {languages.map((l) => (
               <button type="button" key={l} className="chip is-on" onClick={() => setLanguages(languages.filter((x) => x !== l))}
@@ -75,13 +83,23 @@ export function RepoForm() {
             {unused.map((s) => (
               <button type="button" key={s} className="chip" onClick={() => addLanguage(s)} aria-label={`Add ${s}`}>+ {s}</button>
             ))}
-            <input className="chip-input" value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={onKey}
-              onBlur={() => draft && addLanguage(draft)} placeholder="other…" aria-label="Add another language" />
+            <LanguageInput
+              value={draft}
+              onChange={(v) => { setDraft(v); setLangError(null); }}
+              selected={languages}
+              invalid={!!langError}
+              errorId="lang-error"
+              onCommit={addLanguage}
+              onBackspaceEmpty={() => languages.length && setLanguages(languages.slice(0, -1))}
+            />
           </div>
+          {langError && <p id="lang-error" className="repo-error" role="alert">{langError}</p>}
         </fieldset>
 
         <fieldset className="opt">
-          <legend className="eyebrow">Experience</legend>
+          <legend className="opt-label">
+            Your experience <span className="opt-hint">sets how hard the issues are</span>
+          </legend>
           <div className="level" role="radiogroup">
             {(["beginner", "intermediate"] as Level[]).map((l) => (
               <label key={l} className={`level-opt ${level === l ? "is-on" : ""}`}>
