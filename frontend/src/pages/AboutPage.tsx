@@ -84,9 +84,24 @@ export default function AboutPage() {
         <section>
           <h2>How it's evaluated</h2>
           <p>
-            About ten well-known repos, each with setup steps and conventions written by hand from their docs. The
-            eval runs the agent on each and counts how many of those facts appear in the plan. It also logs tokens,
-            estimated cost and latency per run. <span className="tag tag-todo">TODO · results pending</span>
+            Ten well-known repos (Python, JavaScript/TypeScript, Rust and Go), each with 3–7 setup steps and
+            conventions written by hand from its own CONTRIBUTING file and PR template. Those 56 facts were committed
+            before the first run. The eval runs the agent fresh on each repo and counts how many facts appear in the
+            plan's setup steps and conventions; it also logs time, tokens and estimated cost.
+          </p>
+          <p>
+            <strong>Result: 51 of 56 facts (91%).</strong> Every setup fact was found (21/21); conventions scored
+            30/35, and the misses were rules the docs mention only in passing, such as “commits are squashed on
+            merge”. Median 53 seconds and 2 model turns per plan. Half the runs used the backup model because the
+            main one was overloaded.
+          </p>
+          <p>
+            What it doesn't measure: it checks that expected facts are present (recall), not that every claim in the
+            plan is correct. One plan mentioned a sign-off rule the repo doesn't have. Measuring that is on the
+            roadmap.{" "}
+            <a className="link-arrow" href={`${REPO_URL}/blob/main/backend/evals/results/report.md`} target="_blank" rel="noreferrer">
+              Full report
+            </a>
           </p>
         </section>
 
@@ -104,6 +119,7 @@ export default function AboutPage() {
           <h2>Roadmap</h2>
           <ul>
             <li><strong>Pre-PR diff checker.</strong> Paste your diff before opening a PR and check it against the repo's rules: tests touched, changelog updated, commit format, template filled in.</li>
+            <li>Check precision too: flag claims in a plan that the repo's docs don't support.</li>
             <li>Follow contributing guides hosted outside the repo.</li>
             <li>Skip issues that already have a linked open PR.</li>
             <li>Shareable plan links.</li>
