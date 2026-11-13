@@ -36,9 +36,10 @@ class Settings:
     )
     rate_limit_per_hour: int = field(default_factory=lambda: int(os.getenv("RATE_LIMIT_PER_HOUR", "8")))
     # USD per 1M tokens, used only to *estimate* what a run would cost on the paid tier.
-    # Defaults are Gemini 2.5 Flash list prices; output price includes thinking tokens.
-    price_in_per_m: float = field(default_factory=lambda: float(os.getenv("PRICE_IN_PER_M", "0.30")))
-    price_out_per_m: float = field(default_factory=lambda: float(os.getenv("PRICE_OUT_PER_M", "2.50")))
+    # Defaults are Gemini 3.6 Flash list prices (ai.google.dev pricing, Nov 2026; a 50% introductory
+    # rate applies until 2026-12-31, so this slightly overstates current cost). Output includes thinking.
+    price_in_per_m: float = field(default_factory=lambda: float(os.getenv("PRICE_IN_PER_M", "1.50")))
+    price_out_per_m: float = field(default_factory=lambda: float(os.getenv("PRICE_OUT_PER_M", "7.50")))
 
     def missing_keys(self) -> list[str]:
         return [name for name, val in (("GEMINI_API_KEY", self.gemini_api_key), ("GITHUB_TOKEN", self.github_token)) if not val]
