@@ -1,0 +1,145 @@
+{
+ "repo": "prettier/prettier",
+ "ran_at": "2026-11-13T20:31:02+00:00",
+ "wall_s": 10.3,
+ "plan": {
+  "classification": {
+   "full_name": "prettier/prettier",
+   "description": "Prettier is an opinionated code formatter.",
+   "primary_language": "JavaScript",
+   "languages": {
+    "JavaScript": 98.6,
+    "CSS": 0.9,
+    "Vue": 0.2,
+    "HTML": 0.2,
+    "MDX": 0.1,
+    "Shell": 0.0
+   },
+   "stars": 52411,
+   "size": "large",
+   "activity": "active",
+   "file_count": 9786,
+   "default_branch": "main"
+  },
+  "architecture_summary": "Prettier is an opinionated code formatter implemented primarily in JavaScript. It parses source files into Abstract Syntax Trees (ASTs) using various language parsers and then re-prints them using a layout engine based on Wadler's pretty-printing paper. The source code is organized into core logic (`src/main`), configuration handling (`src/config`), CLI handling, and language-specific printers and formatters (`src/language-js`, `src/language-css`, etc.). Tests are primarily integration and snapshot tests located under `tests/format/`, run using Jest.",
+  "key_directories": [],
+  "setup_steps": [
+   {
+    "title": "Install dependencies",
+    "command": "yarn",
+    "detail": "Install project dependencies using Yarn.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Run tests",
+    "command": "yarn test",
+    "detail": "Run the test suite via Jest to verify the setup.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   }
+  ],
+  "conventions": {
+   "branch": [],
+   "commit": [],
+   "pull_request": [
+    "Follow the PR template (.github/PULL_REQUEST_TEMPLATE.md) exactly.",
+    "Include tests for all changes.",
+    "Add a unreleased changelog entry under changelog_unreleased/ following the template."
+   ],
+   "code_style": [
+    "Run `yarn fix` to automatically lint with ESLint and format with Prettier.",
+    "Run `yarn lint` to check types, linting, spelling, changelogs, etc."
+   ],
+   "sources": [
+    "CONTRIBUTING.md",
+    ".github/PULL_REQUEST_TEMPLATE.md"
+   ]
+  },
+  "issues": [
+   {
+    "number": 20306,
+    "title": "Non-idempotent: `delete` of a JSDoc-cast member needs two passes",
+    "url": "https://github.com/prettier/prettier/issues/20306",
+    "labels": [
+     "help wanted",
+     "lang:javascript",
+     "area:idempotency"
+    ],
+    "difficulty": "medium",
+    "score": 76,
+    "heuristic_score": 0.798,
+    "skill_match": 0.9,
+    "updated_days_ago": 25,
+    "comments": 1,
+    "why": "A clear JavaScript formatting issue involving non-idempotency with JSDoc casts, perfect for a JavaScript beginner looking at AST formatting.",
+    "approach": "Investigate why formatting a `delete` expression with a JSDoc type cast drops parentheses on the first pass and adds them back differently on the second pass, then fix the comment/parenthesization or printing logic in JavaScript formatting.",
+    "likely_files": []
+   },
+   {
+    "number": 19955,
+    "title": "Unstable comment print in parenthesized arrow function body",
+    "url": "https://github.com/prettier/prettier/issues/19955",
+    "labels": [
+     "help wanted",
+     "area:comments",
+     "area:idempotency"
+    ],
+    "difficulty": "medium",
+    "score": 72,
+    "heuristic_score": 0.734,
+    "skill_match": 0.85,
+    "updated_days_ago": 58,
+    "comments": 6,
+    "why": "A targeted issue with JavaScript arrow functions and comment idempotency.",
+    "approach": "Examine why comment printing inside parenthesized arrow function bodies leads to unstable prints across passes, and adjust comment attachment or printing rules.",
+    "likely_files": [
+     "src/language-js/comments",
+     "tests/format/js/arrow-function"
+    ]
+   },
+   {
+    "number": 19427,
+    "title": "SCSS: inline comment before nested function adds extra indent",
+    "url": "https://github.com/prettier/prettier/issues/19427",
+    "labels": [
+     "help wanted",
+     "lang:css/scss/less"
+    ],
+    "difficulty": "medium",
+    "score": 71,
+    "heuristic_score": 0.761,
+    "skill_match": 0.8,
+    "updated_days_ago": 73,
+    "comments": 3,
+    "why": "A scoped styling issue in SCSS comment printing suitable for someone familiar with JavaScript/TypeScript logic.",
+    "approach": "Investigate why an inline comment before a nested function in SCSS adds an extra indent, and adjust the comment handling or printer indentation logic for SCSS/CSS.",
+    "likely_files": [
+     "src/language-css",
+     "tests/format/scss"
+    ]
+   }
+  ],
+  "first_timer_insights": [
+   "First-time contributors successfully landed PRs ranging from simple typo fixes and documentation updates to test additions and small bug fixes in comment printing or configuration caching.",
+   "Successful PRs include a changelog file in changelog_unreleased/ and relevant test cases."
+  ],
+  "caveats": [
+   "Some complex comment-handling and AST idempotency issues may require deep familiarity with internal printing invariants and parser AST structures."
+  ]
+ },
+ "metrics": {
+  "steps": 2,
+  "tool_calls": 6,
+  "input_tokens": 26894,
+  "output_tokens": 828,
+  "invalid_submissions": 0,
+  "model": "gemini-3.5-flash-lite",
+  "est_cost_usd": 0.04655,
+  "latency_s": 10.34,
+  "github_requests": 9,
+  "github_cache_hits": 4,
+  "cached": false
+ },
+ "error": null
+}

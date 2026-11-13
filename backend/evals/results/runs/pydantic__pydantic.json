@@ -1,0 +1,224 @@
+{
+ "repo": "pydantic/pydantic",
+ "ran_at": "2026-11-13T20:25:13+00:00",
+ "wall_s": 77.0,
+ "plan": {
+  "classification": {
+   "full_name": "pydantic/pydantic",
+   "description": "Data validation using Python type hints",
+   "primary_language": "Python",
+   "languages": {
+    "Python": 86.0,
+    "Rust": 13.8,
+    "Makefile": 0.1,
+    "JavaScript": 0.0,
+    "HTML": 0.0,
+    "Shell": 0.0
+   },
+   "stars": 29484,
+   "size": "large",
+   "activity": "active",
+   "file_count": 3579,
+   "default_branch": "main"
+  },
+  "architecture_summary": "Pydantic is Python's standard data validation and serialization library based on type annotations. The repository consists of two main parts: `pydantic-core` (a Rust library providing fast core parsing and validation logic) and `pydantic` (the high-level Python library). The Python codebase handles model construction (BaseModel), field validation decorators (@field_validator, @model_validator), JSON schema generation (GenerateJsonSchema), custom types (networks, types), and schema resolution (_internal/_generate_schema.py). Pytest test suites reside under tests/ to verify validation behavior, typing support, and schema generation.",
+  "key_directories": [
+   {
+    "path": "pydantic/",
+    "purpose": "Main Python package source code containing BaseModel, field definitions, decorators, types, and schema generators"
+   },
+   {
+    "path": "pydantic/_internal/",
+    "purpose": "Internal framework utilities for schema generation, model construction, dataclasses, and generics"
+   },
+   {
+    "path": "pydantic-core/",
+    "purpose": "Rust repository/submodule powering core validation and serialization logic"
+   },
+   {
+    "path": "tests/",
+    "purpose": "Pytest test suite covering model validation, types, JSON Schema generation, and decorators"
+   },
+   {
+    "path": "docs/",
+    "purpose": "Documentation pages built using MkDocs"
+   }
+  ],
+  "setup_steps": [
+   {
+    "title": "Clone repository",
+    "command": "git clone git@github.com:<your username>/pydantic.git && cd pydantic",
+    "detail": "Fork the repository on GitHub and clone your fork locally.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Install uv and pre-commit",
+    "command": "curl -LsSf https://astral.sh/uv/install.sh | sh && uv tool install pre-commit",
+    "detail": "Install Astral uv package manager and pre-commit hook tool.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Install dependencies",
+    "command": "make install",
+    "detail": "Installs Pydantic along with development, test, and documentation dependencies.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Format code",
+    "command": "make format",
+    "detail": "Runs automated code formatting and linting using ruff.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Run tests and linting",
+    "command": "make",
+    "detail": "Runs the pytest test suite and linter checks locally.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Build documentation",
+    "command": "make docs",
+    "detail": "Builds the local MkDocs documentation site.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   }
+  ],
+  "conventions": {
+   "branch": [
+    "Checkout feature branches from main: git switch -c my-new-feature-branch",
+    "Target main branch for pull requests (or docs-update for out-of-cycle documentation fixes)"
+   ],
+   "commit": [
+    "PR/Commit titles must use imperative sentence case starting with a verb (e.g., 'Fix ...', 'Support ...', 'Improve performance of ...')",
+    "Do not use issue numbers or prefixes like 'fix:' or 'feat:' in PR titles",
+    "Enclose code identifiers in backticks (e.g. `BaseModel`)"
+   ],
+   "pull_request": [
+    "PR title is used directly as the changelog entry",
+    "Include issue link in test docstring for bug fixes: def test_feature(): \\\"\\\"\\\"https://github.com/pydantic/pydantic/issues/1234\\\"\\\"\\\"",
+    "Follow `.github/PULL_REQUEST_TEMPLATE.md` and ensure issue assignment prior to opening a PR"
+   ],
+   "code_style": [
+    "Linters & formatters: ruff for code formatting and linting",
+    "Auto-format command: make format",
+    "Test and lint command: make",
+    "Docs build command: make docs"
+   ],
+   "sources": [
+    "CONTRIBUTING.md",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    "pyproject.toml"
+   ]
+  },
+  "issues": [
+   {
+    "number": 9176,
+    "title": "`HttpUrl.path` differs from same-named argument in the factory method ",
+    "url": "https://github.com/pydantic/pydantic/issues/9176",
+    "labels": [
+     "bug V2",
+     "topic-urls"
+    ],
+    "difficulty": "easy",
+    "score": 86,
+    "heuristic_score": 0.685,
+    "skill_match": 0.95,
+    "updated_days_ago": 1,
+    "comments": 3,
+    "why": "Pure Python issue in URL type definition, easy to reproduce and fix without touching Rust code.",
+    "approach": "Inspect HttpUrl and Url.build() path handling in pydantic/networks.py. Ensure consistent handling of leading slashes between .path attribute readouts and path parameter values accepted by HttpUrl.build(). Add unit tests in tests/test_networks.py.",
+    "likely_files": [
+     "pydantic/networks.py",
+     "tests/test_networks.py"
+    ]
+   },
+   {
+    "number": 14266,
+    "title": "Type checkers complain when invoking super().method() if method was decorated with @model_validator",
+    "url": "https://github.com/pydantic/pydantic/issues/14266",
+    "labels": [
+     "bug V2",
+     "pending"
+    ],
+    "difficulty": "medium",
+    "score": 70,
+    "heuristic_score": 0.685,
+    "skill_match": 0.85,
+    "updated_days_ago": 3,
+    "comments": 1,
+    "why": "Great fit for learning Python type hint decorators and validating behavior against static type checkers.",
+    "approach": "Check overload type signatures of @model_validator decorator in pydantic/functional_validators.py. Adjust return type annotations to ensure static type checkers (mypy, pyright) correctly recognize method calls via super().",
+    "likely_files": [
+     "pydantic/functional_validators.py",
+     "pydantic/_internal/_decorators.py",
+     "tests/test_validators.py"
+    ]
+   },
+   {
+    "number": 14236,
+    "title": "model_json_schema() raises PydanticOmit when a shared PEP 695 alias of SkipJsonSchema is used in two fields",
+    "url": "https://github.com/pydantic/pydantic/issues/14236",
+    "labels": [],
+    "difficulty": "medium",
+    "score": 68,
+    "heuristic_score": 0.685,
+    "skill_match": 0.8,
+    "updated_days_ago": 3,
+    "comments": 1,
+    "why": "Python-focused issue in JSON Schema generation handling modern Python PEP 695 type aliases.",
+    "approach": "Locate SkipJsonSchema and PydanticOmit handling in pydantic/json_schema.py. Ensure that when a shared PEP 695 type alias containing SkipJsonSchema is used across multiple model fields, schema omission is applied cleanly without raising unhandled PydanticOmit errors.",
+    "likely_files": [
+     "pydantic/json_schema.py",
+     "pydantic/_internal/_generate_schema.py",
+     "tests/test_json_schema.py"
+    ]
+   },
+   {
+    "number": 14263,
+    "title": "Serialization JSON Schema omits null for an unless-none serializer on an Any field",
+    "url": "https://github.com/pydantic/pydantic/issues/14263",
+    "labels": [],
+    "difficulty": "medium",
+    "score": 68,
+    "heuristic_score": 0.685,
+    "skill_match": 0.8,
+    "updated_days_ago": 3,
+    "comments": 1,
+    "why": "Direct logic fix in Pydantic's Python JSON schema generator with straightforward test assertions.",
+    "approach": "Examine how `unless-none` serialization mode affects nullability in pydantic/json_schema.py. Update schema logic so `null` is included in the JSON Schema for `Any` fields when using `unless-none` serializers, and add pytest cases in tests/test_json_schema.py.",
+    "likely_files": [
+     "pydantic/json_schema.py",
+     "tests/test_json_schema.py"
+    ]
+   }
+  ],
+  "first_timer_insights": [
+   "Successful first PRs range from single-line documentation fixes (`docs/contributing.md`) to small bug fixes in `pydantic/json_schema.py` or test cleanups in `tests/`.",
+   "Maintainers value strict adherence to PR title formatting guidelines since titles automatically populate the changelog."
+  ],
+  "caveats": [
+   "PRs addressing existing open issues require assignment from maintainers before submission; unassigned PRs are automatically closed by automated CI workflows.",
+   "Rust toolchain is required if building or making changes inside pydantic-core.",
+   "Windows users need Git core.symlinks enabled to support symlinked tests between tests/ and pydantic-core/tests."
+  ]
+ },
+ "metrics": {
+  "steps": 2,
+  "tool_calls": 9,
+  "input_tokens": 25868,
+  "output_tokens": 4057,
+  "invalid_submissions": 0,
+  "model": "gemini-3.6-flash",
+  "est_cost_usd": 0.06923,
+  "latency_s": 76.97,
+  "github_requests": 9,
+  "github_cache_hits": 4,
+  "cached": false
+ },
+ "error": null
+}

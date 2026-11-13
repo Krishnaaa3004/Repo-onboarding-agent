@@ -1,0 +1,178 @@
+{
+ "repo": "astral-sh/ruff",
+ "ran_at": "2026-11-13T20:35:42+00:00",
+ "wall_s": 47.9,
+ "plan": {
+  "classification": {
+   "full_name": "astral-sh/ruff",
+   "description": "An extremely fast Python linter and code formatter, written in Rust.",
+   "primary_language": "Rust",
+   "languages": {
+    "Rust": 96.7,
+    "Python": 2.5,
+    "TypeScript": 0.7,
+    "Shell": 0.1,
+    "HTML": 0.0,
+    "CSS": 0.0
+   },
+   "stars": 51227,
+   "size": "large",
+   "activity": "active",
+   "file_count": 11323,
+   "default_branch": "main"
+  },
+  "architecture_summary": "Ruff is an extremely fast Python linter and code formatter written in Rust, structured as a monorepo with flat crates located in the `crates/` directory. The core linting logic, rules, and checkers live primarily in `crates/ruff_linter`, while the command-line interface lives in `crates/ruff`. Other crates handle AST representation (`ruff_python_ast`), formatting (`ruff_python_formatter`), semantic analysis, and development utilities. Development relies on Cargo for building and testing, `uv` for Python tooling and running utility commands, and `cargo insta` for snapshot testing.",
+  "key_directories": [],
+  "setup_steps": [
+   {
+    "title": "Install Rust toolchain",
+    "command": "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
+    "detail": "Install the Rust toolchain required for building and testing Ruff.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Install uv",
+    "command": "pip install uv",
+    "detail": "Install `uv` to manage Python utility commands and development toolchains.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Run Ruff locally",
+    "command": "cargo run -p ruff -- check /path/to/file.py --no-cache",
+    "detail": "Run Ruff locally from the repository root.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Run tests",
+    "command": "cargo test",
+    "detail": "Run Rust tests (or `uv run --only-dev cargo nextest run`).",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   }
+  ],
+  "conventions": {
+   "branch": [],
+   "commit": [
+    "Include category and rule code/name in PR titles for lint rules (e.g. `[flake8-simplify] Fix key_in_dict for keys method (SIM118)`)"
+   ],
+   "pull_request": [
+    "Follow PR template summary and notes, and adhere to Astral's AI policy."
+   ],
+   "code_style": [
+    "cargo clippy --workspace --all-targets --all-features (Rust linting)",
+    "prek run --all-files via uv (formatting and Markdown/Python linting)"
+   ],
+   "sources": [
+    "CONTRIBUTING.md",
+    ".github/PULL_REQUEST_TEMPLATE.md"
+   ]
+  },
+  "issues": [
+   {
+    "number": 8705,
+    "title": "Use the indent-width setting for E111 and E114",
+    "url": "https://github.com/astral-sh/ruff/issues/8705",
+    "labels": [
+     "rule",
+     "configuration",
+     "help wanted"
+    ],
+    "difficulty": "easy",
+    "score": 84,
+    "heuristic_score": 0.605,
+    "skill_match": 1.0,
+    "updated_days_ago": 69,
+    "comments": 16,
+    "why": "A well-scoped configuration issue ideal for a Rust beginner looking at pycodestyle rules.",
+    "approach": "Update E111 and E114 checks in `crates/ruff_linter/src/rules/pycodestyle/rules/logical_lines/indentation.rs` to respect the configured indent-width setting.",
+    "likely_files": [
+     "crates/ruff_linter/src/rules/pycodestyle/rules/logical_lines/indentation.rs"
+    ]
+   },
+   {
+    "number": 12475,
+    "title": "`N999` (`invalid-module-name`) mixes correctness and stylistic recommendations",
+    "url": "https://github.com/astral-sh/ruff/issues/12475",
+    "labels": [
+     "rule",
+     "help wanted"
+    ],
+    "difficulty": "medium",
+    "score": 73,
+    "heuristic_score": 0.632,
+    "skill_match": 1.0,
+    "updated_days_ago": 100,
+    "comments": 11,
+    "why": "Gives exposure to naming rules and separation of module name correctness versus style in `pep8_naming`.",
+    "approach": "Review N999 module name validation logic in `crates/ruff_linter/src/rules/pep8_naming/rules/invalid_module_name.rs` to separate correctness checks from stylistic recommendations.",
+    "likely_files": [
+     "crates/ruff_linter/src/rules/pep8_naming/rules/invalid_module_name.rs"
+    ]
+   },
+   {
+    "number": 4481,
+    "title": "Ruff --fix on SIM118 introducing TypeError ",
+    "url": "https://github.com/astral-sh/ruff/issues/4481",
+    "labels": [
+     "bug",
+     "type-inference",
+     "help wanted"
+    ],
+    "difficulty": "medium",
+    "score": 72,
+    "heuristic_score": 0.602,
+    "skill_match": 1.0,
+    "updated_days_ago": 216,
+    "comments": 6,
+    "why": "Targets a specific rule logic file in `flake8_simplify` with a clear bug report and minimal reproduction example.",
+    "approach": "Examine SIM118 implementation in `crates/ruff_linter/src/rules/flake8_simplify/rules/key_in_dict.rs` to ensure `--fix` does not incorrectly flag or transform objects with a `.keys()` method but no `__iter__` or incorrect type.",
+    "likely_files": [
+     "crates/ruff_linter/src/rules/flake8_simplify/rules/key_in_dict.rs"
+    ]
+   },
+   {
+    "number": 16537,
+    "title": "F841 treats `except` bindings differently from all other bindings",
+    "url": "https://github.com/astral-sh/ruff/issues/16537",
+    "labels": [
+     "bug",
+     "help wanted"
+    ],
+    "difficulty": "medium",
+    "score": 67,
+    "heuristic_score": 0.483,
+    "skill_match": 1.0,
+    "updated_days_ago": 541,
+    "comments": 2,
+    "why": "Directly points to the file and function handling unused variables in bindings, making it a great target for understanding Ruff's semantic analysis.",
+    "approach": "Investigate how `except` bindings are handled separately in `crates/ruff_linter/src/checkers/ast/analyze/bindings.rs` and refactor them to be processed consistently with other bindings to avoid false positives in F841.",
+    "likely_files": [
+     "crates/ruff_linter/src/checkers/ast/analyze/bindings.rs"
+    ]
+   }
+  ],
+  "first_timer_insights": [
+   "First-time contributors often start by tackling `good first issue` or `help wanted` items related to specific lint rules, configuration handling, or bug fixes in `ruff_linter`."
+  ],
+  "caveats": [
+   "Ensure the Rust toolchain and `uv` are installed before running development tasks. Some rules or snapshot tests may require `cargo insta review` after making modifications."
+  ]
+ },
+ "metrics": {
+  "steps": 2,
+  "tool_calls": 9,
+  "input_tokens": 26882,
+  "output_tokens": 2189,
+  "invalid_submissions": 0,
+  "model": "gemini-3.5-flash-lite",
+  "est_cost_usd": 0.05674,
+  "latency_s": 47.94,
+  "github_requests": 3,
+  "github_cache_hits": 11,
+  "cached": false
+ },
+ "error": null
+}

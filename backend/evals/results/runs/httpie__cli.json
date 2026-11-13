@@ -1,0 +1,200 @@
+{
+ "repo": "httpie/cli",
+ "ran_at": "2026-11-13T20:20:18+00:00",
+ "wall_s": 68.5,
+ "plan": {
+  "classification": {
+   "full_name": "httpie/cli",
+   "description": "\ud83e\udd67 HTTPie CLI  \u2014 modern, user-friendly command-line HTTP client for the API era. JSON support, colors, sessions, downloads, plugins & more.",
+   "primary_language": "Python",
+   "languages": {
+    "Python": 92.4,
+    "Roff": 5.1,
+    "Shell": 1.2,
+    "Makefile": 1.1,
+    "Dockerfile": 0.2
+   },
+   "stars": 38711,
+   "size": "medium",
+   "activity": "inactive",
+   "file_count": 265,
+   "default_branch": "master"
+  },
+  "architecture_summary": "HTTPie CLI is a Python application designed for intuitive HTTP request construction and formatted terminal output. Entry points are registered in setup.cfg and invoke main execution through httpie.__main__ and httpie.core. Command-line flags, option parsing, and request construction are handled in httpie/cli. Output processing, syntax highlighting via Pygments/Rich, and stream writing are managed inside httpie/output. Persistent sessions, downloads, authentication, and file uploads are handled by dedicated modules like httpie/sessions.py and httpie/downloads.py. External shell completion and man page assets reside in the extras/ directory.",
+  "key_directories": [
+   {
+    "path": "httpie",
+    "purpose": "Core Python package containing entry points, request processing, HTTP client wrappers, and session management."
+   },
+   {
+    "path": "httpie/cli",
+    "purpose": "Command-line option definitions, argument parsing logic, and CLI request item handling."
+   },
+   {
+    "path": "httpie/output",
+    "purpose": "Formatting engines, syntax highlighting lexers, stream output writing, and terminal UI formatting."
+   },
+   {
+    "path": "tests",
+    "purpose": "Pytest unit and integration test suite testing CLI, client behavior, downloads, and output processing."
+   },
+   {
+    "path": "extras",
+    "purpose": "Shell auto-completions (bash, fish), man pages, and profiling scripts."
+   }
+  ],
+  "setup_steps": [
+   {
+    "title": "Clone the repository",
+    "command": "git clone git@github.com:<YOU>/httpie.git && cd httpie",
+    "detail": "Clone your fork of the repository locally and enter the project folder.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Run initial setup and tests",
+    "command": "make all",
+    "detail": "Creates a Python virtual environment in ./venv, installs dependencies in editable mode, and runs the test suite.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Activate virtual environment",
+    "command": "source venv/bin/activate",
+    "detail": "Activates the virtual environment for your shell session so that the 'http' binary points to your local working copy.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Run unit tests",
+    "command": "make test",
+    "detail": "Runs pytest across the HTTPie codebase with test coverage options.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Check code style",
+    "command": "make codestyle",
+    "detail": "Runs flake8 to verify PEP8 compliance across source code and test files.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   }
+  ],
+  "conventions": {
+   "branch": [
+    "Fork the repository and create a new feature branch for your changes (e.g., git checkout -b my_topical_branch).",
+    "Target the master branch when opening pull requests."
+   ],
+   "commit": [
+    "Write clear, descriptive commit messages.",
+    "Add your name to AUTHORS.md if you wish to be listed as a contributor."
+   ],
+   "pull_request": [
+    "Code changes must include corresponding unit/integration tests in tests/.",
+    "Interface or behavior modifications must update documentation.",
+    "Consider adding a CHANGELOG.md entry describing your change.",
+    "Ensure all GitHub Actions automated CI checks pass."
+   ],
+   "code_style": [
+    "Follow PEP8 formatting standards.",
+    "Run flake8 checks using make codestyle.",
+    "Run test suite with pytest using make test or python -m pytest."
+   ],
+   "sources": [
+    "CONTRIBUTING.md",
+    "Makefile",
+    "setup.cfg"
+   ]
+  },
+  "issues": [
+   {
+    "number": 912,
+    "title": "fish shell completions",
+    "url": "https://github.com/httpie/cli/issues/912",
+    "labels": [
+     "enhancement",
+     "help wanted",
+     "packaging"
+    ],
+    "difficulty": "easy",
+    "score": 76,
+    "heuristic_score": 0.536,
+    "skill_match": 0.85,
+    "updated_days_ago": 167,
+    "comments": 14,
+    "why": "Ideal beginner task touching shell script completions with precedent in recent merged PRs.",
+    "approach": "Inspect extras/httpie-completion.fish alongside extras/httpie-completion.bash. Add fish shell completions for missing options or command aliases, then verify completion behavior using fish.",
+    "likely_files": [
+     "extras/httpie-completion.fish"
+    ]
+   },
+   {
+    "number": 428,
+    "title": "Compact help",
+    "url": "https://github.com/httpie/cli/issues/428",
+    "labels": [
+     "enhancement",
+     "docs",
+     "help wanted",
+     "needs product design"
+    ],
+    "difficulty": "medium",
+    "score": 60,
+    "heuristic_score": 0.41,
+    "skill_match": 0.9,
+    "updated_days_ago": 302,
+    "comments": 15,
+    "why": "Direct fit for Python beginners learning HTTPie's CLI argument parsing and option definition structure.",
+    "approach": "Examine httpie/cli/argparser.py and httpie/cli/definition.py to locate usage generation logic. Introduce or refine compact usage/help output formatting and add unit tests under tests/ to verify output.",
+    "likely_files": [
+     "httpie/cli/argparser.py",
+     "httpie/cli/definition.py"
+    ]
+   },
+   {
+    "number": 799,
+    "title": "--pretty=all piped to a pager does not work on Windows",
+    "url": "https://github.com/httpie/cli/issues/799",
+    "labels": [
+     "bug",
+     "windows",
+     "help wanted"
+    ],
+    "difficulty": "medium",
+    "score": 59,
+    "heuristic_score": 0.456,
+    "skill_match": 0.8,
+    "updated_days_ago": 1862,
+    "comments": 5,
+    "why": "Good opportunity to explore Python output formatting, stream handling, and platform-specific terminal quirks.",
+    "approach": "Inspect terminal color and paging detection in httpie/output/writer.py and httpie/output/streams.py when stdout is redirected or piped on Windows. Update stream coloring logic to handle Windows pipe streams properly and add corresponding unit tests.",
+    "likely_files": [
+     "httpie/output/writer.py",
+     "httpie/output/streams.py"
+    ]
+   }
+  ],
+  "first_timer_insights": [
+   "Recent merged first-time PRs frequently involve documentation fixes (e.g., docs/README.md), shell completion enhancements (extras/httpie-completion.fish), or small targeted Python fixes.",
+   "Maintainers favor small, self-contained PRs with high test coverage and minimal code churn."
+  ],
+  "caveats": [
+   "Windows users must run venv creation and pip installation commands manually instead of using the Unix Makefile.",
+   "Some issues marked 'help wanted' (e.g. compact help design) may require maintainer input on exact UI/formatting preference before final implementation."
+  ]
+ },
+ "metrics": {
+  "steps": 2,
+  "tool_calls": 9,
+  "input_tokens": 19892,
+  "output_tokens": 3045,
+  "invalid_submissions": 0,
+  "model": "gemini-3.6-flash",
+  "est_cost_usd": 0.05268,
+  "latency_s": 68.52,
+  "github_requests": 10,
+  "github_cache_hits": 3,
+  "cached": false
+ },
+ "error": null
+}

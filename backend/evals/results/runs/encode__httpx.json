@@ -1,0 +1,186 @@
+{
+ "repo": "encode/httpx",
+ "ran_at": "2026-11-13T20:33:16+00:00",
+ "wall_s": 68.5,
+ "plan": {
+  "classification": {
+   "full_name": "encode/httpx",
+   "description": "A next generation HTTP client for Python. \ud83e\udd8b",
+   "primary_language": "Python",
+   "languages": {
+    "Python": 99.5,
+    "Shell": 0.5
+   },
+   "stars": 15782,
+   "size": "small",
+   "activity": "moderate",
+   "file_count": 125,
+   "default_branch": "master"
+  },
+  "architecture_summary": "HTTPX is a feature-rich HTTP client library for Python providing synchronous (httpx.Client) and asynchronous (httpx.AsyncClient) APIs. The top-level package exposes user-facing methods in _api.py, request/response models in _models.py, authentication flows in _auth.py, and exception classes in _exceptions.py. Transports in httpx/_transports/ decouple high-level client logic from low-level network execution, delegating core socket and HTTP protocol handling to httpcore. Additional modules handle content streams (_content.py), decoding (_decoders.py), and multipart form payloads (_multipart.py). Built-in support is also provided for ASGI and WSGI application testing via specialized transport classes.",
+  "key_directories": [
+   {
+    "path": "httpx",
+    "purpose": "Core Python library codebase containing sync/async clients, models, authentication, and headers logic"
+   },
+   {
+    "path": "httpx/_transports",
+    "purpose": "Transport implementations (HTTPTransport, AsyncHTTPTransport, MockTransport, ASGITransport, WSGITransport)"
+   },
+   {
+    "path": "tests",
+    "purpose": "Comprehensive pytest suite categorized by client, transport, and model components"
+   },
+   {
+    "path": "docs",
+    "purpose": "Markdown documentation pages used to build the official project documentation website via MkDocs"
+   },
+   {
+    "path": "scripts",
+    "purpose": "Shell scripts automating installation, test running, linting, code checks, and local doc server preview"
+   }
+  ],
+  "setup_steps": [
+   {
+    "title": "Clone the repository",
+    "command": "git clone https://github.com/YOUR-USERNAME/httpx",
+    "detail": "Clone your forked repository to your local computer.",
+    "source": "docs/contributing.md",
+    "inferred": false
+   },
+   {
+    "title": "Install dependencies",
+    "command": "cd httpx && scripts/install",
+    "detail": "Install HTTPX in editable mode along with all development and test dependencies.",
+    "source": "docs/contributing.md",
+    "inferred": false
+   },
+   {
+    "title": "Run the test suite",
+    "command": "scripts/test",
+    "detail": "Run the full pytest suite. Ensure ports 8000 and 8001 are free before executing.",
+    "source": "docs/contributing.md",
+    "inferred": false
+   },
+   {
+    "title": "Run linter and code checks",
+    "command": "scripts/check",
+    "detail": "Run code formatting and Mypy strict type checks.",
+    "source": "docs/contributing.md",
+    "inferred": false
+   },
+   {
+    "title": "Preview documentation",
+    "command": "scripts/docs",
+    "detail": "Build and launch local documentation preview site using MkDocs.",
+    "source": "docs/contributing.md",
+    "inferred": false
+   }
+  ],
+  "conventions": {
+   "branch": [
+    "Create a topic branch on your personal fork and submit pull requests against the master branch."
+   ],
+   "commit": [
+    "Keep commits atomic and focused on a single change.",
+    "Write clear and concise commit messages."
+   ],
+   "pull_request": [
+    "Pull requests must include unit tests for code changes and update documentation as needed.",
+    "Fill out the pull request checklist in .github/PULL_REQUEST_TEMPLATE.md.",
+    "Substantial features or non-bugfix changes should ideally start as GitHub Discussions before PR submission."
+   ],
+   "code_style": [
+    "Use 'scripts/lint' to auto-format code using Ruff.",
+    "Use 'scripts/check' to run linting and strict Mypy type-checking.",
+    "Use 'scripts/test' to run pytest suite (100% test coverage is enforced)."
+   ],
+   "sources": [
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    "docs/contributing.md",
+    "pyproject.toml"
+   ]
+  },
+  "issues": [
+   {
+    "number": 3352,
+    "title": "Clean up imports in `__init.py__`",
+    "url": "https://github.com/encode/httpx/issues/3352",
+    "labels": [
+     "refactor"
+    ],
+    "difficulty": "easy",
+    "score": 87,
+    "heuristic_score": 0.685,
+    "skill_match": 1.0,
+    "updated_days_ago": 29,
+    "comments": 3,
+    "why": "It is a clean, beginner-friendly refactoring task that helps you understand the module layout of the codebase without risking runtime bugs.",
+    "approach": "Group exported items in httpx/__init__.py's __all__ list by their defining source module (such as _api.py, _auth.py, etc.) using comments as outlined in the issue description. Verify that all exported symbols remain present and run `scripts/check`.",
+    "likely_files": [
+     "httpx/__init__.py"
+    ]
+   },
+   {
+    "number": 3334,
+    "title": "Document `Authentication` header is stripped on redirection",
+    "url": "https://github.com/encode/httpx/issues/3334",
+    "labels": [
+     "docs"
+    ],
+    "difficulty": "easy",
+    "score": 85,
+    "heuristic_score": 0.671,
+    "skill_match": 0.95,
+    "updated_days_ago": 47,
+    "comments": 2,
+    "why": "It is a documentation issue requiring clear Python library usage explanation, making it an safe entry point.",
+    "approach": "Find the header handling documentation in docs/quickstart.md or docs/advanced/clients.md. Add a clear note explaining that Sensitive headers like Authorization are stripped across cross-origin redirects for security reasons.",
+    "likely_files": [
+     "docs/quickstart.md",
+     "docs/advanced/clients.md"
+    ]
+   },
+   {
+    "number": 3712,
+    "title": "MockTransport doesn't set the elapsed property",
+    "url": "https://github.com/encode/httpx/issues/3712",
+    "labels": [],
+    "difficulty": "medium",
+    "score": 70,
+    "heuristic_score": 0.685,
+    "skill_match": 0.85,
+    "updated_days_ago": 21,
+    "comments": 2,
+    "why": "It involves writing clean Python code and tests for developer-facing mock utilities in httpx.",
+    "approach": "Update httpx/_transports/mock.py so MockTransport properly populates the elapsed response time or accepts a response time duration. Add tests in tests/test_transports.py to verify response.elapsed behavior when using MockTransport.",
+    "likely_files": [
+     "httpx/_transports/mock.py"
+    ]
+   }
+  ],
+  "first_timer_insights": [
+   "Recent merged PRs by first-time contributors often focus on small documentation fixes (e.g. fixing syntax errors in quickstart docs or adding third-party package references).",
+   "Code PRs from first-timers are generally small and contained (e.g. updating exports in httpx/__init__.py or updating test cases for external dependency compatibility).",
+   "All PRs must maintain 100% test coverage and pass Mypy strict type checks."
+  ],
+  "caveats": [
+   "The test suite requires ports 8000 and 8001 to be free when running local integration tests.",
+   "Some optional features (HTTP/2, SOCKS, Brotli compression, CLI) require extra dependencies specified in pyproject.toml optional-dependencies."
+  ]
+ },
+ "metrics": {
+  "steps": 2,
+  "tool_calls": 10,
+  "input_tokens": 23784,
+  "output_tokens": 3428,
+  "invalid_submissions": 0,
+  "model": "gemini-3.6-flash",
+  "est_cost_usd": 0.06139,
+  "latency_s": 68.48,
+  "github_requests": 1,
+  "github_cache_hits": 15,
+  "cached": false
+ },
+ "error": null
+}

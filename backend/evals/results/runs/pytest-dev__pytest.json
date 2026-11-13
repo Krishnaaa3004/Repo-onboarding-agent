@@ -1,0 +1,152 @@
+{
+ "repo": "pytest-dev/pytest",
+ "ran_at": "2026-11-13T20:30:43+00:00",
+ "wall_s": 10.5,
+ "plan": {
+  "classification": {
+   "full_name": "pytest-dev/pytest",
+   "description": "The pytest framework makes it easy to write small tests, yet scales to support complex functional testing",
+   "primary_language": "Python",
+   "languages": {
+    "Python": 100.0,
+    "Gherkin": 0.0
+   },
+   "stars": 14684,
+   "size": "medium",
+   "activity": "active",
+   "file_count": 644,
+   "default_branch": "main"
+  },
+  "architecture_summary": "Pytest is a mature, feature-rich testing framework for Python that makes it easy to write small tests and scales to complex functional testing. The codebase is structured with core package definitions under `src/pytest/` and internal implementations under `src/_pytest/`, with test suites located in `testing/`. Development and test environments are managed using `tox` and `uv`, supporting linting, documentation building, and comprehensive test suites across multiple Python versions.",
+  "key_directories": [],
+  "setup_steps": [
+   {
+    "title": "Install uv",
+    "command": "pip install --upgrade uv",
+    "detail": "Ensure uv is available for fast dependency installation.",
+    "source": "tox.ini",
+    "inferred": false
+   },
+   {
+    "title": "Run test suite via tox",
+    "command": "tox -e py310",
+    "detail": "Run tests using tox for the desired Python version or development environment.",
+    "source": "tox.ini",
+    "inferred": false
+   },
+   {
+    "title": "Install pre-commit hooks",
+    "command": "pre-commit install",
+    "detail": "Set up pre-commit hooks for linting and code formatting checks.",
+    "source": ".pre-commit-config.yaml",
+    "inferred": true
+   }
+  ],
+  "conventions": {
+   "branch": [
+    "Use standard feature/bugfix branches off main."
+   ],
+   "commit": [
+    "Follow standard commit conventions and sign-off/DCO rules where applicable; use Co-authored-by trailers if AI tools are used."
+   ],
+   "pull_request": [
+    "Fill out the PR template checklist, add tests for new features/bugfixes, include a changelog entry in `changelog/` for non-trivial changes, and add your name to `AUTHORS`."
+   ],
+   "code_style": [
+    "Uses Ruff, Black, and pre-commit hooks as defined in pyproject.toml and .pre-commit-config.yaml."
+   ],
+   "sources": [
+    "CONTRIBUTING.rst",
+    ".github/PULL_REQUEST_TEMPLATE.md"
+   ]
+  },
+  "issues": [
+   {
+    "number": 10821,
+    "title": "Unexpected behavior of skipping entire module when calling  unittest.skip(\"a\")(\"b\")",
+    "url": "https://github.com/pytest-dev/pytest/issues/10821",
+    "labels": [
+     "type: bug",
+     "status: help wanted",
+     "plugin: unittest"
+    ],
+    "difficulty": "medium",
+    "score": 79,
+    "heuristic_score": 0.798,
+    "skill_match": 1.0,
+    "updated_days_ago": 23,
+    "comments": 3,
+    "why": "A clear bug report involving the unittest plugin with python code and reproducible examples, well suited for a beginner wanting to explore pytest's unittest integration.",
+    "approach": "Investigate the issue where skipping entire modules happens unexpectedly when using unittest.skip with extra arguments, and fix the argument validation/handling logic in the unittest plugin.",
+    "likely_files": [
+     "src/_pytest/unittest.py",
+     "testing/test_unittest.py"
+    ]
+   },
+   {
+    "number": 1004,
+    "title": "Test listed twice when there's an error during teardown",
+    "url": "https://github.com/pytest-dev/pytest/issues/1004",
+    "labels": [
+     "type: enhancement",
+     "status: help wanted",
+     "topic: reporting"
+    ],
+    "difficulty": "medium",
+    "score": 74,
+    "heuristic_score": 0.664,
+    "skill_match": 1.0,
+    "updated_days_ago": 16,
+    "comments": 13,
+    "why": "An enhancement/bug reporting issue about duplicate test output listings during teardown errors, offering good exposure to pytest's runner and terminal reporting internals.",
+    "approach": "Examine how teardown errors interact with test outcomes and ensure reporting doesn't list tests redundantly when teardown exceptions occur.",
+    "likely_files": [
+     "src/_pytest/runner.py",
+     "src/_pytest/terminal.py",
+     "testing/test_terminal.py"
+    ]
+   },
+   {
+    "number": 13669,
+    "title": "Vulnerable tmpdir handling (CVE-2025-71176)",
+    "url": "https://github.com/pytest-dev/pytest/issues/13669",
+    "labels": [
+     "status: help wanted",
+     "plugin: tmpdir"
+    ],
+    "difficulty": "medium",
+    "score": 72,
+    "heuristic_score": 0.612,
+    "skill_match": 1.0,
+    "updated_days_ago": 61,
+    "comments": 46,
+    "why": "A security-relevant bug report with specific pointers to code lines, ideal for learning how temporary files and directories are managed safely in pytest.",
+    "approach": "Review and harden temporary directory handling heuristics in `src/_pytest/tmpdir.py` to address potential security issues (CVE-2025-71176).",
+    "likely_files": [
+     "src/_pytest/tmpdir.py",
+     "testing/test_tmpdir.py"
+    ]
+   }
+  ],
+  "first_timer_insights": [
+   "Successful first-time PRs in pytest often touch files under `src/_pytest/` or documentation/changelogs, are concise and well-tested, include a changelog rst fragment, and add the contributor to `AUTHORS`."
+  ],
+  "caveats": [
+   "Unsupervised agentic contributions are not accepted per project policy; contributors must understand and stand behind all submitted code and changes."
+  ]
+ },
+ "metrics": {
+  "steps": 2,
+  "tool_calls": 8,
+  "input_tokens": 29091,
+  "output_tokens": 933,
+  "invalid_submissions": 0,
+  "model": "gemini-3.5-flash-lite",
+  "est_cost_usd": 0.05063,
+  "latency_s": 10.46,
+  "github_requests": 10,
+  "github_cache_hits": 4,
+  "cached": false
+ },
+ "error": null
+}

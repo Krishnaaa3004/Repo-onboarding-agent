@@ -1,0 +1,218 @@
+{
+ "repo": "vitejs/vite",
+ "ran_at": "2026-11-13T20:34:34+00:00",
+ "wall_s": 57.2,
+ "plan": {
+  "classification": {
+   "full_name": "vitejs/vite",
+   "description": "Next generation frontend tooling. It's fast!",
+   "primary_language": "TypeScript",
+   "languages": {
+    "TypeScript": 84.2,
+    "JavaScript": 8.7,
+    "HTML": 4.2,
+    "CSS": 2.3,
+    "Vue": 0.2,
+    "Svelte": 0.2
+   },
+   "stars": 83885,
+   "size": "large",
+   "activity": "active",
+   "file_count": 3007,
+   "default_branch": "main"
+  },
+  "architecture_summary": "Vite is a next-generation frontend build tool and dev server built as a pnpm workspace monorepo in TypeScript. Its core dev server provides instant module serving using native ES modules and fast Hot Module Replacement (HMR), while production builds bundle code using Rolldown. The main repository logic is split across the `vite` package (node dev server, CLI, bundler plugins, and browser HMR client), `create-vite` (scaffolding templates), `plugin-legacy` (legacy browser support), and `docs/` (documentation website).",
+  "key_directories": [
+   {
+    "path": "packages/vite/src/node",
+    "purpose": "Core Node.js engine including dev server, CLI, build setup, preview server, and built-in plugins."
+   },
+   {
+    "path": "packages/vite/src/client",
+    "purpose": "In-browser client-side runtime logic for HMR and overlay error popups."
+   },
+   {
+    "path": "packages/vite/src/shared",
+    "purpose": "Shared utility functions and types used by both Node server and browser client."
+   },
+   {
+    "path": "packages/create-vite",
+    "purpose": "CLI project generator tool and framework templates (Vue, React, Svelte, Lit, etc.)."
+   },
+   {
+    "path": "docs",
+    "purpose": "Official documentation website built with VitePress."
+   }
+  ],
+  "setup_steps": [
+   {
+    "title": "Install dependencies",
+    "command": "pnpm i",
+    "detail": "Install monorepo dependencies across all packages using pnpm.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Build workspace packages",
+    "command": "pnpm run build",
+    "detail": "Build all workspace packages in the monorepo to generate necessary type definitions and bundles.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Start watch mode for core Vite package",
+    "command": "pnpm --filter='./packages/vite' run dev",
+    "detail": "Run Vite in watch mode to automatically rebuild as you make changes during core development.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Configure git blame ignore file",
+    "command": "git config --local blame.ignoreRevsFile .git-blame-ignore-revs",
+    "detail": "Configure git to ignore formatting-only commits in git blame.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Run unit tests",
+    "command": "pnpm run test-unit",
+    "detail": "Run unit test suite using Vitest to verify your local changes.",
+    "source": "package.json",
+    "inferred": false
+   }
+  ],
+  "conventions": {
+   "branch": [
+    "Target the `main` branch for pull requests."
+   ],
+   "commit": [
+    "Use Conventional Commits format (e.g. `feat(css): ...`, `fix(html): ...`, `docs(features): ...`).",
+    "Ignore formatting revisions in git blame via `git config --local blame.ignoreRevsFile .git-blame-ignore-revs`."
+   ],
+   "pull_request": [
+    "Fill out the PR template in `.github/PULL_REQUEST_TEMPLATE.md` including issue references (e.g. `fixes #123`), clear description, alternatives considered, and added tests.",
+    "Follow the AI Policy guidelines listed in the PR template and CONTRIBUTING.md if using AI assistance."
+   ],
+   "code_style": [
+    "Formatting: managed via `oxfmt`. Run `pnpm run format` to format the codebase.",
+    "Linting: managed via `oxlint`. Run `pnpm run lint` to lint.",
+    "Type checking: run `pnpm run typecheck` to run `tsc` across workspace packages.",
+    "Testing: run unit tests with `pnpm run test-unit` and e2e tests with `pnpm run test-e2e` using Vitest."
+   ],
+   "sources": [
+    "CONTRIBUTING.md",
+    "package.json",
+    ".github/PULL_REQUEST_TEMPLATE.md"
+   ]
+  },
+  "issues": [
+   {
+    "number": 15915,
+    "title": "CSS minification warnings don't contain file names, making them difficult to track down",
+    "url": "https://github.com/vitejs/vite/issues/15915",
+    "labels": [
+     "enhancement",
+     "contribution welcome",
+     "feat: css"
+    ],
+    "difficulty": "easy",
+    "score": 83,
+    "heuristic_score": 0.565,
+    "skill_match": 1.0,
+    "updated_days_ago": 181,
+    "comments": 11,
+    "why": "Small, direct fix in TypeScript enhancing error/warning reporting for CSS minification.",
+    "approach": "Locate the minification warning logging logic inside Vite's CSS plugin. Ensure the current file path or module ID is attached to minifier warnings before logging them to the console logger.",
+    "likely_files": [
+     "packages/vite/src/node/plugins/css.ts"
+    ]
+   },
+   {
+    "number": 10997,
+    "title": "Support parsing .htm as same as .html",
+    "url": "https://github.com/vitejs/vite/issues/10997",
+    "labels": [
+     "pending triage",
+     "contribution welcome"
+    ],
+    "difficulty": "easy",
+    "score": 76,
+    "heuristic_score": 0.403,
+    "skill_match": 1.0,
+    "updated_days_ago": 620,
+    "comments": 9,
+    "why": "Clear requirements for extending HTML file extension support in Vite's HTML handling logic.",
+    "approach": "Update constants or regex helpers handling HTML file resolution to match `.htm` alongside `.html`. Add tests in unit or playground tests verifying `.htm` files process properly.",
+    "likely_files": [
+     "packages/vite/src/node/plugins/html.ts",
+     "packages/vite/src/node/constants.ts"
+    ]
+   },
+   {
+    "number": 5196,
+    "title": "Vite Preview Watch Mode",
+    "url": "https://github.com/vitejs/vite/issues/5196",
+    "labels": [
+     "enhancement",
+     "contribution welcome"
+    ],
+    "difficulty": "medium",
+    "score": 70,
+    "heuristic_score": 0.638,
+    "skill_match": 0.9,
+    "updated_days_ago": 15,
+    "comments": 29,
+    "why": "Adds an intuitive CLI option for previewing built assets with auto-reload capabilities.",
+    "approach": "Add a `--watch` option to the `vite preview` CLI command in `cli.ts` and set up file system watching on the preview dist output directory in `preview.ts`.",
+    "likely_files": [
+     "packages/vite/src/node/preview.ts",
+     "packages/vite/src/node/cli.ts"
+    ]
+   },
+   {
+    "number": 6714,
+    "title": "Serve index.html inside subdirectory of public from subdirectory path",
+    "url": "https://github.com/vitejs/vite/issues/6714",
+    "labels": [
+     "contribution welcome",
+     "feat: html",
+     "p2-nice-to-have"
+    ],
+    "difficulty": "medium",
+    "score": 61,
+    "heuristic_score": 0.413,
+    "skill_match": 0.9,
+    "updated_days_ago": 347,
+    "comments": 12,
+    "why": "Good opportunity to learn how Vite handles static asset serving and dev server middleware.",
+    "approach": "Inspect public static file middleware serving logic. Update directory handling so requests to subdirectories inside `public/` fallback to checking and serving nested `index.html` files.",
+    "likely_files": [
+     "packages/vite/src/node/server/middlewares/static.ts",
+     "packages/vite/src/node/plugins/html.ts"
+    ]
+   }
+  ],
+  "first_timer_insights": [
+   "Recent first-time merged PRs are small and focused, often involving 1-2 files and fewer than 20 lines of changes.",
+   "Common areas for beginner PRs include documentation updates in `docs/` and targeted fixes or performance tweaks in core plugins like `packages/vite/src/node/plugins/css.ts`."
+  ],
+  "caveats": [
+   "The core vite package heavily relies on Rolldown and esbuild/lightningcss for bundling and minification, so some behavior depends on lower-level bundler bindings.",
+   "End-to-end tests require Playwright and may take longer to execute locally than unit tests."
+  ]
+ },
+ "metrics": {
+  "steps": 3,
+  "tool_calls": 10,
+  "input_tokens": 30727,
+  "output_tokens": 3313,
+  "invalid_submissions": 0,
+  "model": "gemini-3.6-flash",
+  "est_cost_usd": 0.07094,
+  "latency_s": 57.18,
+  "github_requests": 2,
+  "github_cache_hits": 13,
+  "cached": false
+ },
+ "error": null
+}

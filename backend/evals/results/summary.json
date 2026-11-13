@@ -1,0 +1,735 @@
+{
+ "summary": {
+  "repos_scored": 10,
+  "repos_failed": [],
+  "facts_found": 51,
+  "facts_total": 56,
+  "accuracy": 0.911,
+  "by_kind": {
+   "setup": {
+    "found": 21,
+    "total": 21,
+    "accuracy": 1.0
+   },
+   "convention": {
+    "found": 30,
+    "total": 35,
+    "accuracy": 0.857
+   }
+  },
+  "latency_s": {
+   "median": 52.6,
+   "max": 109.3
+  },
+  "est_cost_usd": {
+   "mean": 0.0562,
+   "total": 0.5623
+  },
+  "model_turns_median": 2.0,
+  "tool_calls_median": 9.0,
+  "tokens_median": 28396.5,
+  "models": {
+   "gemini-3.6-flash": 5,
+   "gemini-3.5-flash-lite": 5
+  }
+ },
+ "repos": [
+  {
+   "repo": "httpie/cli",
+   "languages": [
+    "Python"
+   ],
+   "score": {
+    "found": 6,
+    "total": 6,
+    "by_kind": {
+     "setup": {
+      "found": 2,
+      "total": 2
+     },
+     "convention": {
+      "found": 4,
+      "total": 4
+     }
+    },
+    "facts": [
+     {
+      "id": "make-all",
+      "kind": "setup",
+      "fact": "`make all` (or `make install`) sets up the dev environment",
+      "found": true
+     },
+     {
+      "id": "make-test",
+      "kind": "setup",
+      "fact": "Run tests with `make test` (pytest)",
+      "found": true
+     },
+     {
+      "id": "pep8",
+      "kind": "convention",
+      "fact": "Code must follow PEP8; `make codestyle` must pass",
+      "found": true
+     },
+     {
+      "id": "tests-required",
+      "kind": "convention",
+      "fact": "Code changes need tests",
+      "found": true
+     },
+     {
+      "id": "changelog",
+      "kind": "convention",
+      "fact": "Consider adding a CHANGELOG entry",
+      "found": true
+     },
+     {
+      "id": "topic-branch",
+      "kind": "convention",
+      "fact": "Work on a topical branch",
+      "found": true
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 2,
+    "tool_calls": 9,
+    "input_tokens": 19892,
+    "output_tokens": 3045,
+    "invalid_submissions": 0,
+    "model": "gemini-3.6-flash",
+    "est_cost_usd": 0.05268,
+    "latency_s": 68.52,
+    "github_requests": 10,
+    "github_cache_hits": 3,
+    "cached": false
+   },
+   "error": null
+  },
+  {
+   "repo": "encode/httpx",
+   "languages": [
+    "Python"
+   ],
+   "score": {
+    "found": 5,
+    "total": 5,
+    "by_kind": {
+     "setup": {
+      "found": 2,
+      "total": 2
+     },
+     "convention": {
+      "found": 3,
+      "total": 3
+     }
+    },
+    "facts": [
+     {
+      "id": "scripts-install",
+      "kind": "setup",
+      "fact": "Install with `scripts/install`",
+      "found": true
+     },
+     {
+      "id": "scripts-test",
+      "kind": "setup",
+      "fact": "Run tests with `scripts/test`",
+      "found": true
+     },
+     {
+      "id": "scripts-lint-check",
+      "kind": "convention",
+      "fact": "Format with `scripts/lint`, check with `scripts/check`",
+      "found": true
+     },
+     {
+      "id": "coverage-100",
+      "kind": "convention",
+      "fact": "Test coverage must stay at 100%",
+      "found": true
+     },
+     {
+      "id": "tests-required",
+      "kind": "convention",
+      "fact": "Add a test for each change",
+      "found": true
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 2,
+    "tool_calls": 10,
+    "input_tokens": 23784,
+    "output_tokens": 3428,
+    "invalid_submissions": 0,
+    "model": "gemini-3.6-flash",
+    "est_cost_usd": 0.06139,
+    "latency_s": 68.48,
+    "github_requests": 1,
+    "github_cache_hits": 15,
+    "cached": false
+   },
+   "error": null
+  },
+  {
+   "repo": "pydantic/pydantic",
+   "languages": [
+    "Python"
+   ],
+   "score": {
+    "found": 6,
+    "total": 6,
+    "by_kind": {
+     "setup": {
+      "found": 3,
+      "total": 3
+     },
+     "convention": {
+      "found": 3,
+      "total": 3
+     }
+    },
+    "facts": [
+     {
+      "id": "uv",
+      "kind": "setup",
+      "fact": "Uses uv for the toolchain",
+      "found": true
+     },
+     {
+      "id": "make-install",
+      "kind": "setup",
+      "fact": "`make install` installs dependencies",
+      "found": true
+     },
+     {
+      "id": "pre-commit",
+      "kind": "setup",
+      "fact": "Install pre-commit (`uv tool install pre-commit`)",
+      "found": true
+     },
+     {
+      "id": "make-format-test",
+      "kind": "convention",
+      "fact": "`make format` to format, `make` to run tests and lint",
+      "found": true
+     },
+     {
+      "id": "new-branch",
+      "kind": "convention",
+      "fact": "Create a new branch for your changes",
+      "found": true
+     },
+     {
+      "id": "docs-build",
+      "kind": "convention",
+      "fact": "If docs changed, `make docs` must build",
+      "found": true
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 2,
+    "tool_calls": 9,
+    "input_tokens": 25868,
+    "output_tokens": 4057,
+    "invalid_submissions": 0,
+    "model": "gemini-3.6-flash",
+    "est_cost_usd": 0.06923,
+    "latency_s": 76.97,
+    "github_requests": 9,
+    "github_cache_hits": 4,
+    "cached": false
+   },
+   "error": null
+  },
+  {
+   "repo": "Textualize/rich",
+   "languages": [
+    "Python"
+   ],
+   "score": {
+    "found": 7,
+    "total": 7,
+    "by_kind": {
+     "setup": {
+      "found": 2,
+      "total": 2
+     },
+     "convention": {
+      "found": 5,
+      "total": 5
+     }
+    },
+    "facts": [
+     {
+      "id": "uv-sync",
+      "kind": "setup",
+      "fact": "`uv sync` creates the venv and installs dev dependencies",
+      "found": true
+     },
+     {
+      "id": "make-test",
+      "kind": "setup",
+      "fact": "Run tests with `make test` (or `uv run pytest`)",
+      "found": true
+     },
+     {
+      "id": "black",
+      "kind": "convention",
+      "fact": "Format code with black",
+      "found": true
+     },
+     {
+      "id": "changelog",
+      "kind": "convention",
+      "fact": "Update CHANGELOG.md before the PR",
+      "found": true
+     },
+     {
+      "id": "contributors",
+      "kind": "convention",
+      "fact": "Add yourself to CONTRIBUTORS.md",
+      "found": true
+     },
+     {
+      "id": "pre-commit",
+      "kind": "convention",
+      "fact": "Install the pre-commit hooks",
+      "found": true
+     },
+     {
+      "id": "issue-first",
+      "kind": "convention",
+      "fact": "Open or link an issue/discussion before starting",
+      "found": true
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 2,
+    "tool_calls": 9,
+    "input_tokens": 25581,
+    "output_tokens": 4259,
+    "invalid_submissions": 0,
+    "model": "gemini-3.6-flash",
+    "est_cost_usd": 0.07031,
+    "latency_s": 109.3,
+    "github_requests": 12,
+    "github_cache_hits": 4,
+    "cached": false
+   },
+   "error": null
+  },
+  {
+   "repo": "vitejs/vite",
+   "languages": [
+    "TypeScript"
+   ],
+   "score": {
+    "found": 4,
+    "total": 6,
+    "by_kind": {
+     "setup": {
+      "found": 3,
+      "total": 3
+     },
+     "convention": {
+      "found": 1,
+      "total": 3
+     }
+    },
+    "facts": [
+     {
+      "id": "pnpm-install",
+      "kind": "setup",
+      "fact": "`pnpm i` in the repo root",
+      "found": true
+     },
+     {
+      "id": "pnpm-build",
+      "kind": "setup",
+      "fact": "`pnpm run build` before testing",
+      "found": true
+     },
+     {
+      "id": "pnpm-test",
+      "kind": "setup",
+      "fact": "Run tests with `pnpm test`",
+      "found": true
+     },
+     {
+      "id": "tests-required",
+      "kind": "convention",
+      "fact": "Include tests that fail without the PR",
+      "found": true
+     },
+     {
+      "id": "issue-first",
+      "kind": "convention",
+      "fact": "Open a suggestion issue before a new feature",
+      "found": false
+     },
+     {
+      "id": "squash",
+      "kind": "convention",
+      "fact": "Multiple commits are fine; they are squashed on merge",
+      "found": false
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 3,
+    "tool_calls": 10,
+    "input_tokens": 30727,
+    "output_tokens": 3313,
+    "invalid_submissions": 0,
+    "model": "gemini-3.6-flash",
+    "est_cost_usd": 0.07094,
+    "latency_s": 57.18,
+    "github_requests": 2,
+    "github_cache_hits": 13,
+    "cached": false
+   },
+   "error": null
+  },
+  {
+   "repo": "astral-sh/ruff",
+   "languages": [
+    "Rust"
+   ],
+   "score": {
+    "found": 6,
+    "total": 7,
+    "by_kind": {
+     "setup": {
+      "found": 3,
+      "total": 3
+     },
+     "convention": {
+      "found": 3,
+      "total": 4
+     }
+    },
+    "facts": [
+     {
+      "id": "rust-toolchain",
+      "kind": "setup",
+      "fact": "Install the Rust toolchain",
+      "found": true
+     },
+     {
+      "id": "uv",
+      "kind": "setup",
+      "fact": "uv manages the dev toolchain",
+      "found": true
+     },
+     {
+      "id": "cargo-test",
+      "kind": "setup",
+      "fact": "Run tests with `cargo test` / nextest",
+      "found": true
+     },
+     {
+      "id": "clippy",
+      "kind": "convention",
+      "fact": "Must pass `cargo clippy` lint",
+      "found": true
+     },
+     {
+      "id": "prek",
+      "kind": "convention",
+      "fact": "Run formatting hooks with prek",
+      "found": true
+     },
+     {
+      "id": "insta",
+      "kind": "convention",
+      "fact": "Update snapshot tests with `cargo insta review`",
+      "found": false
+     },
+     {
+      "id": "rule-in-title",
+      "kind": "convention",
+      "fact": "PR title names the lint rule category/code",
+      "found": true
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 2,
+    "tool_calls": 9,
+    "input_tokens": 26882,
+    "output_tokens": 2189,
+    "invalid_submissions": 0,
+    "model": "gemini-3.5-flash-lite",
+    "est_cost_usd": 0.05674,
+    "latency_s": 47.94,
+    "github_requests": 3,
+    "github_cache_hits": 11,
+    "cached": false
+   },
+   "error": null
+  },
+  {
+   "repo": "sharkdp/bat",
+   "languages": [
+    "Rust"
+   ],
+   "score": {
+    "found": 3,
+    "total": 3,
+    "by_kind": {
+     "setup": {
+      "found": 1,
+      "total": 1
+     },
+     "convention": {
+      "found": 2,
+      "total": 2
+     }
+    },
+    "facts": [
+     {
+      "id": "cargo-build",
+      "kind": "setup",
+      "fact": "Build with cargo",
+      "found": true
+     },
+     {
+      "id": "changelog",
+      "kind": "convention",
+      "fact": "Add a CHANGELOG entry (checked by CI)",
+      "found": true
+     },
+     {
+      "id": "regression-tests",
+      "kind": "convention",
+      "fact": "Add regression tests (tests/integration_tests.rs)",
+      "found": true
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 2,
+    "tool_calls": 7,
+    "input_tokens": 21385,
+    "output_tokens": 929,
+    "invalid_submissions": 0,
+    "model": "gemini-3.5-flash-lite",
+    "est_cost_usd": 0.03905,
+    "latency_s": 12.56,
+    "github_requests": 9,
+    "github_cache_hits": 3,
+    "cached": false
+   },
+   "error": null
+  },
+  {
+   "repo": "pytest-dev/pytest",
+   "languages": [
+    "Python"
+   ],
+   "score": {
+    "found": 4,
+    "total": 5,
+    "by_kind": {
+     "setup": {
+      "found": 1,
+      "total": 1
+     },
+     "convention": {
+      "found": 3,
+      "total": 4
+     }
+    },
+    "facts": [
+     {
+      "id": "tox",
+      "kind": "setup",
+      "fact": "Run tests and checks with tox",
+      "found": true
+     },
+     {
+      "id": "changelog-file",
+      "kind": "convention",
+      "fact": "Add a changelog file `changelog/<issue>.<type>.rst`",
+      "found": true
+     },
+     {
+      "id": "tests-required",
+      "kind": "convention",
+      "fact": "Include new or updated tests",
+      "found": true
+     },
+     {
+      "id": "ai-policy",
+      "kind": "convention",
+      "fact": "AI-assisted work must be understood and credited (Co-authored-by)",
+      "found": true
+     },
+     {
+      "id": "squash",
+      "kind": "convention",
+      "fact": "Maintainers may squash commits on merge",
+      "found": false
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 2,
+    "tool_calls": 8,
+    "input_tokens": 29091,
+    "output_tokens": 933,
+    "invalid_submissions": 0,
+    "model": "gemini-3.5-flash-lite",
+    "est_cost_usd": 0.05063,
+    "latency_s": 10.46,
+    "github_requests": 10,
+    "github_cache_hits": 4,
+    "cached": false
+   },
+   "error": null
+  },
+  {
+   "repo": "prettier/prettier",
+   "languages": [
+    "JavaScript",
+    "TypeScript"
+   ],
+   "score": {
+    "found": 4,
+    "total": 5,
+    "by_kind": {
+     "setup": {
+      "found": 2,
+      "total": 2
+     },
+     "convention": {
+      "found": 2,
+      "total": 3
+     }
+    },
+    "facts": [
+     {
+      "id": "yarn",
+      "kind": "setup",
+      "fact": "Install dependencies with yarn",
+      "found": true
+     },
+     {
+      "id": "yarn-test",
+      "kind": "setup",
+      "fact": "Run tests with `yarn test`",
+      "found": true
+     },
+     {
+      "id": "changelog-unreleased",
+      "kind": "convention",
+      "fact": "User-facing changes need a `changelog_unreleased/` entry",
+      "found": true
+     },
+     {
+      "id": "yarn-fix",
+      "kind": "convention",
+      "fact": "Lint and format with `yarn fix` (ESLint + Prettier)",
+      "found": true
+     },
+     {
+      "id": "no-new-options",
+      "kind": "convention",
+      "fact": "PRs adding new formatting options are not accepted",
+      "found": false
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 2,
+    "tool_calls": 6,
+    "input_tokens": 26894,
+    "output_tokens": 828,
+    "invalid_submissions": 0,
+    "model": "gemini-3.5-flash-lite",
+    "est_cost_usd": 0.04655,
+    "latency_s": 10.34,
+    "github_requests": 9,
+    "github_cache_hits": 4,
+    "cached": false
+   },
+   "error": null
+  },
+  {
+   "repo": "gohugoio/hugo",
+   "languages": [
+    "Go"
+   ],
+   "score": {
+    "found": 6,
+    "total": 6,
+    "by_kind": {
+     "setup": {
+      "found": 2,
+      "total": 2
+     },
+     "convention": {
+      "found": 4,
+      "total": 4
+     }
+    },
+    "facts": [
+     {
+      "id": "go-mage-install",
+      "kind": "setup",
+      "fact": "Install with `go install` / `mage install`",
+      "found": true
+     },
+     {
+      "id": "check-sh",
+      "kind": "setup",
+      "fact": "`./check.sh` must succeed (or `mage test`)",
+      "found": true
+     },
+     {
+      "id": "cla",
+      "kind": "convention",
+      "fact": "Sign the CLA",
+      "found": true
+     },
+     {
+      "id": "squash",
+      "kind": "convention",
+      "fact": "Squash commits into a single commit",
+      "found": true
+     },
+     {
+      "id": "pkg-prefix",
+      "kind": "convention",
+      "fact": "Commit subject prefixed with the package name, imperative mood",
+      "found": true
+     },
+     {
+      "id": "fixes-issue",
+      "kind": "convention",
+      "fact": "Reference issues with `Fixes #1234` / `See #1234`",
+      "found": true
+     }
+    ]
+   },
+   "metrics": {
+    "steps": 2,
+    "tool_calls": 6,
+    "input_tokens": 24399,
+    "output_tokens": 1092,
+    "invalid_submissions": 0,
+    "model": "gemini-3.5-flash-lite",
+    "est_cost_usd": 0.04479,
+    "latency_s": 13.2,
+    "github_requests": 7,
+    "github_cache_hits": 3,
+    "cached": false
+   },
+   "error": null
+  }
+ ]
+}

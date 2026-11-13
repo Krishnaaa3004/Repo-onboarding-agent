@@ -1,0 +1,201 @@
+{
+ "repo": "Textualize/rich",
+ "ran_at": "2026-11-13T20:27:11+00:00",
+ "wall_s": 109.3,
+ "plan": {
+  "classification": {
+   "full_name": "Textualize/rich",
+   "description": "Rich is a Python library for rich text and beautiful formatting in the terminal.",
+   "primary_language": "Python",
+   "languages": {
+    "Python": 99.9,
+    "Batchfile": 0.0,
+    "Makefile": 0.0
+   },
+   "stars": 57801,
+   "size": "medium",
+   "activity": "active",
+   "file_count": 553,
+   "default_branch": "main"
+  },
+  "architecture_summary": "Rich is a Python library for rich text rendering, formatting, and terminal CLI user interfaces. The library centers around the Console object (rich/console.py), which handles terminal capabilities, styling, theme stacks, and output rendering. Higher-level components like Table, Progress, Markdown, Syntax, and Traceback are modular renderables defined in their respective files within rich/. Styling and formatting rely on core primitives defined in rich/style.py, rich/text.py, rich/segment.py, and rich/markup.py. Lower-level ANSI code generation, cell measurement, and OS compatibility helpers live in private modules prefixed with an underscore (such as _wrap.py, cells.py, and _windows.py).",
+  "key_directories": [
+   {
+    "path": "rich/",
+    "purpose": "Core Python library implementation containing Console, styles, and renderables (Table, Progress, Markdown, etc.)."
+   },
+   {
+    "path": "tests/",
+    "purpose": "Pytest test suite for testing Rich console output, formatting, and components."
+   },
+   {
+    "path": "docs/",
+    "purpose": "Sphinx documentation files and Sphinx RST source documents."
+   },
+   {
+    "path": "examples/",
+    "purpose": "Example scripts demonstrating Rich capabilities and terminal formatting usages."
+   }
+  ],
+  "setup_steps": [
+   {
+    "title": "Install uv package manager",
+    "command": "",
+    "detail": "Install uv package manager following the official uv installation instructions.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Create virtual environment and install dependencies",
+    "command": "uv sync",
+    "detail": "Downloads Python version in .python-version, creates .venv, and installs Rich with development dependencies.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Run test suite",
+    "command": "make test",
+    "detail": "Runs pytest with coverage report. Alternatively run 'uv run pytest --cov-report term-missing --cov=rich tests/ -vv'.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Run type checking",
+    "command": "make typecheck",
+    "detail": "Runs mypy type checker across the rich package. Alternatively run 'uv run mypy -p rich --no-incremental'.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   },
+   {
+    "title": "Format code",
+    "command": "make format",
+    "detail": "Formats Python code with Black. Use 'make format-check' to verify formatting without modifying files.",
+    "source": "CONTRIBUTING.md",
+    "inferred": false
+   }
+  ],
+  "conventions": {
+   "branch": [
+    "Target branch for pull requests is main (referenced as master in legacy docs).",
+    "Create a descriptive feature or bugfix branch in your personal fork before creating a PR."
+   ],
+   "commit": [
+    "Run tests (make test), type checking (make typecheck), and formatting (make format) prior to committing."
+   ],
+   "pull_request": [
+    "Update CHANGELOG.md briefly describing your changes.",
+    "Add your name to CONTRIBUTORS.md if it is your first contribution (unless sole change is doc typos).",
+    "Fill out the PR template checklist including AI usage disclosure and link to the relevant issue."
+   ],
+   "code_style": [
+    "Format code using Black (make format).",
+    "Type annotations are required for all new code and verified via mypy (make typecheck).",
+    "Avoid abbreviations in variable or class names.",
+    "Include docstrings for new code and functions.",
+    "Installing pre-commit hooks (pre-commit install) is recommended."
+   ],
+   "sources": [
+    "CONTRIBUTING.md",
+    ".github/pull_request_template.md",
+    "AI_POLICY.md"
+   ]
+  },
+  "issues": [
+   {
+    "number": 4250,
+    "title": "[BUG] FileProxy.write() returns 0 instead of the number of characters written",
+    "url": "https://github.com/Textualize/rich/issues/4250",
+    "labels": [],
+    "difficulty": "easy",
+    "score": 87,
+    "heuristic_score": 0.685,
+    "skill_match": 1.0,
+    "updated_days_ago": 5,
+    "comments": 1,
+    "why": "Simple function return-value bug in a small module, ideal for a Python beginner.",
+    "approach": "Update FileProxy.write() in rich/file_proxy.py to calculate and return the number of characters written to the file/console proxy rather than returning 0. Add test cases in tests/test_file_proxy.py to verify write return values.",
+    "likely_files": [
+     "rich/file_proxy.py",
+     "tests/test_file_proxy.py"
+    ]
+   },
+   {
+    "number": 4259,
+    "title": "`Console.use_theme(theme, inherit=False)` still inherits the current styles",
+    "url": "https://github.com/Textualize/rich/issues/4259",
+    "labels": [],
+    "difficulty": "easy",
+    "score": 87,
+    "heuristic_score": 0.685,
+    "skill_match": 1.0,
+    "updated_days_ago": 0,
+    "comments": 0,
+    "why": "Clear parameter propagation bug in theme context handling.",
+    "approach": "In rich/console.py, locate use_theme and ThemeContext. Pass the inherit argument down to console.push_theme(self.theme, inherit=self.inherit) so the setting is respected. Add a test in tests/test_console.py checking inherit=False behavior.",
+    "likely_files": [
+     "rich/console.py",
+     "tests/test_console.py"
+    ]
+   },
+   {
+    "number": 4257,
+    "title": "[BUG] filesize.decimal and DownloadColumn show 1,000.0 kB instead of 1.0 MB near unit boundaries",
+    "url": "https://github.com/Textualize/rich/issues/4257",
+    "labels": [],
+    "difficulty": "medium",
+    "score": 73,
+    "heuristic_score": 0.685,
+    "skill_match": 0.95,
+    "updated_days_ago": 2,
+    "comments": 2,
+    "why": "Straightforward math/formatting logic bug in unit boundary rounding.",
+    "approach": "In rich/filesize.py, fix unit selection or rounding logic in decimal() so values rounding up to unit boundaries (e.g. 999.95 kB rounding to 1,000.0 kB) correctly scale up to the next unit (1.0 MB). Update test assertions in tests/test_filesize.py.",
+    "likely_files": [
+     "rich/filesize.py",
+     "tests/test_filesize.py",
+     "tests/test_progress.py"
+    ]
+   },
+   {
+    "number": 4258,
+    "title": "`Markdown` raises `IndexError` for a `</kbd>` with no `<kbd>` before it",
+    "url": "https://github.com/Textualize/rich/issues/4258",
+    "labels": [],
+    "difficulty": "medium",
+    "score": 71,
+    "heuristic_score": 0.685,
+    "skill_match": 0.9,
+    "updated_days_ago": 0,
+    "comments": 2,
+    "why": "Parsing edge-case bug with clear reproducible example provided in issue description.",
+    "approach": "In rich/markdown.py, locate HTML tag parsing logic for inline tags like <kbd>. Ensure closing tags check if a corresponding opening tag exists before popping from the element stack to prevent IndexError. Add test cases in tests/test_markdown.py.",
+    "likely_files": [
+     "rich/markdown.py",
+     "tests/test_markdown.py"
+    ]
+   }
+  ],
+  "first_timer_insights": [
+   "First-time contributors often work on concise bug fixes or typing improvements (around 10-40 lines changed).",
+   "Merged first-timer PRs typically update a single core file in rich/ along with tests in tests/, CHANGELOG.md, and CONTRIBUTORS.md."
+  ],
+  "caveats": [
+   "Rich strictly enforces a no-new-features policy for the core library; only bug fixes or core hooks for third-party extensions are accepted.",
+   "AI-generated PRs require prior explicit approval or response from the maintainer on an issue or discussion according to AI_POLICY.md."
+  ]
+ },
+ "metrics": {
+  "steps": 2,
+  "tool_calls": 9,
+  "input_tokens": 25581,
+  "output_tokens": 4259,
+  "invalid_submissions": 0,
+  "model": "gemini-3.6-flash",
+  "est_cost_usd": 0.07031,
+  "latency_s": 109.3,
+  "github_requests": 12,
+  "github_cache_hits": 4,
+  "cached": false
+ },
+ "error": null
+}
