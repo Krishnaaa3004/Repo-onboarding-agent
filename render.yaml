@@ -1,0 +1,34 @@
+# Render blueprint for the backend API (free web service).
+# Secrets marked `sync: false` are entered in the Render dashboard, never committed.
+services:
+  - type: web
+    name: repo-onboarding-agent-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: uv run --no-dev uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      # Your Vercel URL, e.g. https://repo-onboarding-agent.vercel.app (comma-separate several)
+      - key: ALLOWED_ORIGINS
+        sync: false
+      # Also allow this project's Vercel preview deployments
+      - key: ALLOWED_ORIGIN_REGEX
+        value: ^https://repo-onboarding-agent[a-z0-9-]*\.vercel\.app$
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: GEMINI_FALLBACK_MODELS
+        value: gemini-3.7-flash,gemini-3.8-flash,gemini-3.5-flash-lite
+      # Render's free disk is temporary; the cache is rebuilt after each deploy or restart
+      - key: CACHE_PATH
+        value: /tmp/cache.sqlite3
+      - key: RATE_LIMIT_PER_HOUR
+        value: "8"
