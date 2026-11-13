@@ -48,6 +48,26 @@ def test_rate_limit_counts_fresh_runs(client):
     assert client.get("/api/onboard", params={"repo": "a/b"}).status_code == 429
 
 
+def test_cors_allows_configured_origins_only(monkeypatch, tmp_path):
+    import importlib
+    monkeypatch.setenv("ALLOWED_ORIGINS", "https://repo-onboarding-agent.vercel.app")
+    monkeypatch.setenv("ALLOWED_ORIGIN_REGEX", r"^https://repo-onboarding-agent[a-z0-9-]*\.vercel\.app$")
+    monkeypatch.setenv("CACHE_PATH", str(tmp_path / "c.sqlite3"))
+    fresh = importlib.reload(main)
+    try:
+        with TestClient(fresh.app) as c:
+            def allowed(origin):
+                r = c.get("/api/health", headers={"Origin": origin})
+                return r.headers.get("access-control-allow-origin") == origin
+            assert allowed("https://repo-onboarding-agent.vercel.app")
+            assert allowed("https://repo-onboarding-agent-git-main-krishna.vercel.app")  # preview deploy
+            assert not allowed("https://evil.example.com")
+            assert not allowed("https://repo-onboarding-agent.vercel.app.evil.com")
+    finally:
+        monkeypatch.undo()
+        importlib.reload(main)
+
+
 def test_rate_limiter_window():
     rl = main.RateLimiter(limit=1, window_s=3600)
     assert rl.allow("ip") and not rl.allow("ip") and rl.allow("other")

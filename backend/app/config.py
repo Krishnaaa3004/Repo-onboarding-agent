@@ -34,6 +34,8 @@ class Settings:
     allowed_origins: list[str] = field(
         default_factory=lambda: _csv(os.getenv("ALLOWED_ORIGINS", "http://localhost:5173"))
     )
+    # Optional regex for extra origins, e.g. Vercel preview URLs; empty disables it.
+    allowed_origin_regex: str = field(default_factory=lambda: os.getenv("ALLOWED_ORIGIN_REGEX", ""))
     rate_limit_per_hour: int = field(default_factory=lambda: int(os.getenv("RATE_LIMIT_PER_HOUR", "8")))
     # USD per 1M tokens, used only to *estimate* what a run would cost on the paid tier.
     # Defaults are Gemini 3.6 Flash list prices (ai.google.dev pricing, Nov 2026; a 50% introductory
