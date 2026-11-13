@@ -76,7 +76,7 @@
         {"id": "cargo-test", "kind": "setup", "fact": "Run tests with `cargo test` / nextest", "patterns": ["cargo (test|nextest)", "nextest"]},
         {"id": "clippy", "kind": "convention", "fact": "Must pass `cargo clippy` lint", "patterns": ["clippy"]},
         {"id": "prek", "kind": "convention", "fact": "Run formatting hooks with prek", "patterns": ["\\bprek\\b", "pre-commit"]},
-        {"id": "insta", "kind": "convention", "fact": "Update snapshot tests with `cargo insta review`", "patterns": ["insta"]},
+        {"id": "insta", "kind": "convention", "fact": "Update snapshot tests with `cargo insta review`", "patterns": ["\\binsta\\b"]},
         {"id": "rule-in-title", "kind": "convention", "fact": "PR title names the lint rule category/code", "patterns": ["rule (code|name)", "categor"]}
       ]
     },
@@ -108,7 +108,7 @@
       "sources": ["CONTRIBUTING.md", ".github/PULL_REQUEST_TEMPLATE.md"],
       "facts": [
         {"id": "yarn", "kind": "setup", "fact": "Install dependencies with yarn", "patterns": ["\\byarn\\b"]},
-        {"id": "yarn-test", "kind": "setup", "fact": "Run tests with `yarn test`", "patterns": ["yarn test", "jest"]},
+        {"id": "yarn-test", "kind": "setup", "fact": "Run tests with `yarn test`", "patterns": ["yarn test", "\\bjest\\b"]},
         {"id": "changelog-unreleased", "kind": "convention", "fact": "User-facing changes need a `changelog_unreleased/` entry", "patterns": ["changelog"]},
         {"id": "yarn-fix", "kind": "convention", "fact": "Lint and format with `yarn fix` (ESLint + Prettier)", "patterns": ["yarn fix", "eslint"]},
         {"id": "no-new-options", "kind": "convention", "fact": "PRs adding new formatting options are not accepted", "patterns": ["(new|additional|formatting) options?", "option philosophy"]}
