@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { HeroArt } from "../components/HeroArt";
 import { ArrowRight } from "../components/Icons";
 import { RepoForm } from "../components/RepoForm";
+import { REPO_URL } from "../components/SiteHeader";
 import { EXAMPLES } from "../lib/examples";
 import { useMediaQuery, usePageTitle, useReducedMotion } from "../lib/hooks";
 
@@ -260,12 +261,12 @@ function MiniRoute({ seed }: { seed: number }) {
 /* ---------------- trust ---------------- */
 
 function Trust() {
-  // TODO(eval): replace placeholders with the numbers from backend/evals once the eval has run.
+  // From backend/evals/results/report.md (10 repos, 56 hand-written facts, Nov 2026).
   const stats = [
-    { value: "—%", label: "of hand-written setup and convention facts found, across 10 repos", todo: true },
-    { value: "—s", label: "median time to a fresh plan (cached plans open instantly)", todo: true },
-    { value: "~3", label: "model requests per plan, after moving routine reads into code", todo: false },
-    { value: "—¢", label: "estimated cost per plan at paid Gemini rates", todo: true },
+    { value: "91%", label: "of 56 hand-written setup and convention facts found, across 10 well-known repos" },
+    { value: "53s", label: "median time to a fresh plan on the free model tier; saved plans open instantly" },
+    { value: "2", label: "model turns per plan (median), with about 9 tool calls, after moving routine reads into code" },
+    { value: "6¢", label: "estimated cost per plan at Gemini 3.6 Flash list price; $0 on the free tier" },
   ];
   return (
     <section className="trust" aria-labelledby="trust-title">
@@ -276,15 +277,18 @@ function Trust() {
             <h2 id="trust-title" className="section-title">Measured, not vibes.</h2>
           </div>
           <p className="section-lede sec-head-lede">
-            A small eval harness runs the agent on well-known repos and checks the plan against facts written by
-            hand. Numbers below fill in once it has run.
+            An eval harness runs the agent on 10 well-known repos and checks each plan against facts written by
+            hand from the repo's own docs, before any run.{" "}
+            <a className="link-arrow" href={`${REPO_URL}/blob/main/backend/evals/results/report.md`} target="_blank" rel="noreferrer">
+              Read the full report
+            </a>
           </p>
         </div>
         <dl className="stats">
           {stats.map((s) => (
             <div key={s.label} className="stat">
               <dt className="stat-value">{s.value}</dt>
-              <dd className="stat-label">{s.label}{s.todo && <span className="tag tag-todo">TODO · eval pending</span>}</dd>
+              <dd className="stat-label">{s.label}</dd>
             </div>
           ))}
         </dl>
