@@ -60,6 +60,28 @@ def test_final_score_prefers_level_appropriate_difficulty():
     assert 0 <= final_score(1.0, 5.0, "easy", "beginner") <= 100  # skill_match is clamped
 
 
+def test_profile_keeps_only_real_languages():
+    from app.schemas import Profile
+    p = Profile(languages=["python", "JS", "golang", "sex", "pranav", "teri mkc mkc", "Python", "c++", "  Rust "])
+    assert p.languages == ["Python", "JavaScript", "Go", "C++", "Rust"]
+    assert Profile(languages=["x" * 500]).languages == []
+
+
+def test_frontend_and_backend_language_lists_match():
+    import re
+    from pathlib import Path
+    from app.languages import ALIASES, LANGUAGES
+    ts_file = Path(__file__).resolve().parents[2] / "frontend" / "src" / "lib" / "languages.ts"
+    if not ts_file.exists():
+        pytest.skip("frontend not checked out")
+    ts = ts_file.read_text(encoding="utf-8")
+    ts_langs = re.findall(r'"([^"]+)"', ts.split("as const")[0].split("LANGUAGES = [")[1])
+    alias_block = ts.split("const ALIASES")[1].split("};")[0].split("= {")[1]
+    ts_aliases = {quoted or bare: target for quoted, bare, target in re.findall(r'(?:"([^"]+)"|(\w+)):\s*"([^"]+)"', alias_block)}
+    assert ts_langs == LANGUAGES
+    assert ts_aliases == ALIASES
+
+
 def test_clean_lines_drops_leaked_json_fragments():
     from app.agent import clean_lines
     leaked = ["- No CLA is required.", "conventions:{branch:[", "],code_style:[", ",difficulty:", "},{approach:",

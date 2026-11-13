@@ -7,7 +7,9 @@ from these Pydantic models, so the tool definition and our validation can never 
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+from .languages import clean_languages
 
 Level = Literal["beginner", "intermediate"]
 Difficulty = Literal["easy", "medium", "hard"]
@@ -16,6 +18,12 @@ Difficulty = Literal["easy", "medium", "hard"]
 class Profile(BaseModel):
     languages: list[str] = Field(default_factory=list)
     level: Level = "beginner"
+
+    @field_validator("languages")
+    @classmethod
+    def only_known_languages(cls, v: list[str]) -> list[str]:
+        # Unknown words are dropped, so free text from the URL never reaches the prompt or cache key.
+        return clean_languages(v)
 
 
 # ---------- what the LLM submits ----------
