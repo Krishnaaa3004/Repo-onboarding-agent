@@ -33,13 +33,19 @@ function Hero() {
   const reduced = useReducedMotion();
   const wide = useMediaQuery("(min-width: 960px)");
   const use3d = wide && !reduced && hasWebGL();
-  // Start fetching three.js only once the page is idle, so it never delays first paint.
+  // three.js is ~250 kB gzipped and ~0.7 s of main-thread work. Load it on the visitor's first
+  // interaction (mouse move, scroll, touch, key) rather than on page load, so first paint and
+  // responsiveness stay fast. Until then the static SVG map is shown, which is a complete picture.
   const [idle, setIdle] = useState(false);
   useEffect(() => {
     if (!use3d) return;
-    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
-    if (w.requestIdleCallback) w.requestIdleCallback(() => setIdle(true), { timeout: 1500 });
-    else window.setTimeout(() => setIdle(true), 600);
+    const events = ["pointermove", "scroll", "touchstart", "keydown", "wheel"] as const;
+    const start = () => {
+      setIdle(true);
+      events.forEach((e) => window.removeEventListener(e, start));
+    };
+    events.forEach((e) => window.addEventListener(e, start, { once: true, passive: true }));
+    return () => events.forEach((e) => window.removeEventListener(e, start));
   }, [use3d]);
 
   return (
