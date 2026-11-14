@@ -20,6 +20,9 @@ node_modules/
 dist/
 .vite/
 
+# Demo video project: render output and dependencies (final files are copied to docs/)
+demo-video/out/
+
 # Tool output and local editor/assistant config
 .playwright-mcp/
 .claude/
