@@ -8,11 +8,11 @@ that fit your skills. Shown as a checklist you can tick off.
 > **Live: [repo-onboarding-agent.vercel.app](https://repo-onboarding-agent.vercel.app)**
 > The free backend sleeps when idle, so the first new repo can take ~30 s longer. The example plans open instantly.
 
-![Demo: typing encode/httpx, the agent trace filling in live, then the plan with setup steps, house rules and a ranked issue's suggested approach](docs/demo.gif)
+![Demo: a repo URL is typed in, the agent calls its tools, and the plan for pallets/flask assembles as a checklist](docs/demo.gif)
 
-<sub>Real agent output, sped up while the agent works. The first half is a live run on the deployed site (it
-fell back to a backup model because the main one was busy, as the trace shows); the plan walkthrough at the
-end was recorded locally from an earlier run of the same repo.</sub>
+<sub>An animated walkthrough made with Remotion ([`demo-video/`](demo-video)) from the site's own design tokens
+and the saved pallets/flask plan: every file name, command, rule, issue and number in it is real.
+[MP4 version](docs/demo.mp4).</sub>
 
 ## Why
 
